@@ -998,6 +998,9 @@ thrsum = 0;		//reset throttle sum for voltage monitoring logic in main loop
 //***********************Send Motor PWM Command Logic			
 		#ifndef NOMOTORS
 		#ifndef MOTORS_TO_THROTTLE
+		#ifdef SERVO_OUTPUT
+			mix[i] = .001f * ( PWMFREQ + ( PWMFREQ * mix[i] ) ); //Normalize mixer output to servo pulses, compensating for pwm frequency
+		#endif
 		//normal mode
 		pwm_set( i ,motormap( mix[i] ) );
 		#else
