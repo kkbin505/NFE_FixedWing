@@ -619,7 +619,17 @@ extern float throttlehpf( float in );
 		pidoutput[2] = -pidoutput[2];
 	#endif
 #endif
-	
+
+
+#ifdef SERVO_OUTPUT
+{
+    // stabilized acro mixer
+		mix[MOTOR_FR] = throttle; 															// FR
+		mix[MOTOR_FL] = ((rx[0]+1.0f)/2.0f) + pidoutput[ROLL];  // FL	
+		mix[MOTOR_BR] = ((rx[1]+1.0f)/2.0f) + pidoutput[PITCH]; // BR
+		mix[MOTOR_BL] = ((rx[2]+1.0f)/2.0f) + pidoutput[YAW];		// BL	
+}
+#else		
 #ifdef INVERTED_ENABLE
 if (pwmdir == REVERSE)
 		{
@@ -641,6 +651,7 @@ else
 		mix[MOTOR_BR] = throttle - pidoutput[ROLL] + pidoutput[PITCH] - pidoutput[YAW];		// BR
 		mix[MOTOR_BL] = throttle + pidoutput[ROLL] + pidoutput[PITCH] + pidoutput[YAW];		// BL	
 }
+#endif
 
 #ifdef INVERT_YAW_PID
 // we invert again cause it's used by the pid internally (for limit)

@@ -346,6 +346,8 @@
 //#############################################################################################################################
 //#############################################################################################################################
 
+//Everything for servos depends on this define - do not turn it off
+#define SERVO_OUTPUT
 
 // *************DEFINE FLIGHT CONTROLLER HARDWARE HAS BEEN MODIFIED FOR BRUSHLESS CONVERSION   **WARNING**DO NOT ENABLE DSHOT DMA ESC DRIVER WITH BRUSHED MOTORS ATTACHED**
 //#define BRUSHLESS_CONVERSION
