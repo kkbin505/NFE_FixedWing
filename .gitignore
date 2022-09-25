@@ -4,6 +4,7 @@ Listings/
 DebugConfig/
 
 *.uvguix
+*.uvguix.Travis Schrock
 
 *.dep
 *.bak
