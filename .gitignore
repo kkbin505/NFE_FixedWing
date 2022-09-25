@@ -1,5 +1,7 @@
 output/
 Objects/
+Listings/
+DebugConfig/
 
 *.dep
 *.bak
