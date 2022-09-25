@@ -283,7 +283,7 @@
 
 // *************MIXER SETTINGS & LIMITS
 
-
+#ifndef SERVO_OUTPUT
 #ifdef BRUSHLESS_TARGET
 	#define BRUSHLESS_MIX_SCALING
 #else
@@ -294,6 +294,7 @@
 	//#define MIX_LOWER_THROTTLE_3
 	#define MIX_INCREASE_THROTTLE_3
 	#define MIX_THROTTLE_INCREASE_MAX 0.2f
+#endif
 #endif
 
 //
