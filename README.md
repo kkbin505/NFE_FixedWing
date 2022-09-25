@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/silver13/BoldClash-BWHOOP-B-03.svg?branch=master)](https://travis-ci.org/silver13/BoldClash-BWHOOP-B-03)
+THIS IS A WORK IN PROGRESS - DO NOT FLASH THIS FIRMWARE 
+Update 9/24/22 - Project start.  Intention is to modify NFE_Silverware for use on fixed wing airplanes with servo control.  Drone related algorithims will be evaluated for usefulness and purged.
 
 ## NotFastEnuf Notes - Bwhoop B03 Silverware modified to work on BWHOOP, E011, or H8mini_blue_board.
 Last major update 9.11.18
