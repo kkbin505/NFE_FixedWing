@@ -3,6 +3,8 @@ Objects/
 Listings/
 DebugConfig/
 
+*.uvguix
+
 *.dep
 *.bak
 
