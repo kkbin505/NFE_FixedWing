@@ -29,14 +29,14 @@
 #ifdef SILVERWARE_RATES
 // *************rate in deg/sec
 // *************for acro mode
-#define MAX_RATE 860.0          //Roll & Pitch axis
-#define MAX_RATEYAW 500.0       //Yaw axis (used in acro and leveling modes)
+#define MAX_RATE 360.0          //Roll & Pitch axis
+#define MAX_RATEYAW 100.0       //Yaw axis (used in acro and leveling modes)
 
 // *************EXPO from 0.00 to 1.00 , 0 = no exp
 // *************positive = less sensitive near center 
-#define ACRO_EXPO_ROLL 0.80
-#define ACRO_EXPO_PITCH 0.80
-#define ACRO_EXPO_YAW 0.60
+#define ACRO_EXPO_ROLL 0.25
+#define ACRO_EXPO_PITCH 0.25
+#define ACRO_EXPO_YAW 0.10
 
 #define ANGLE_EXPO_ROLL 0.55
 #define ANGLE_EXPO_PITCH 0.0
@@ -65,7 +65,7 @@
 
 // *************transmitter stick adjustable deadband for roll/pitch/yaw
 // *************.01f = 1% of stick range - comment out to disable
-#define STICKS_DEADBAND .01f
+//#define STICKS_DEADBAND .01f
 
 
 
@@ -105,12 +105,12 @@
 //*************racemode or horizon are switched on.
 #define ARMING CHAN_5
 #define IDLE_UP CHAN_5
-#define LEVELMODE CHAN_6
-#define RACEMODE  CHAN_7
-#define HORIZON   CHAN_8
-#define PIDPROFILE CHAN_9                //For switching stickAccelerator & stickTransition profiles on pid.c page
+#define LEVELMODE CHAN_OFF
+#define RACEMODE  CHAN_OFF
+#define HORIZON   CHAN_OFF
+#define PIDPROFILE CHAN_OFF               //For switching stickAccelerator & stickTransition profiles on pid.c page
 #define RATES CHAN_ON
-#define LEDS_ON CHAN_10
+#define LEDS_ON CHAN_ON
 
 // *************switch for fpv / other, requires fet
 // *************comment out to disable
@@ -138,7 +138,7 @@
 //#define LIPO_CELL_COUNT 1
 
 // ************* Raises pids automatically as battery voltage drops in flight.  Ensure voltage is calibrated before use ****CRITICAL****.
-#define PID_VOLTAGE_COMPENSATION
+//#define PID_VOLTAGE_COMPENSATION
 #define LEVELMODE_PID_ATTENUATION 0.90f  //used to prevent oscillations in angle modes with pid_voltage_compensation enabled due to high pids
 
 // *************lower throttle when battery below threshold - forced landing low voltage cutoff
@@ -233,10 +233,10 @@
 //***********************************************MOTOR OUTPUT SETTINGS**************************************************
 
 // minimum motor output: *for brushed a % value (0.0 - 100.0)   *for brushless this sets digital idle % for DSHOT for any selection
-#define MOTOR_MIN_COMMAND  5.0
+//#define MOTOR_MIN_COMMAND  5.0
 
 // *************invert yaw pid for "PROPS OUT" configuration - This feature is switchable to "PROPS IN" when active with stick gesture DOWN-UP-DOWN, Save selection with DOWN-DOWN-DOWN
-#define INVERT_YAW_PID
+//#define INVERT_YAW_PID
 
 // *************pwm frequency for motor control
 // *************a higher frequency makes the motors more linear
@@ -353,7 +353,7 @@
 //#define BRUSHLESS_CONVERSION
 
 //enables use of stick accelerator and stick transition for d term lpf 1 & 2
-#define ADVANCED_PID_CONTROLLER
+//#define ADVANCED_PID_CONTROLLER
 
 //Throttle must drop below this value if arming feature is enabled for arming to take place.  MIX_INCREASE_THROTTLE_3 if enabled
 //will also not activate on the ground untill this threshold is passed during takeoff for safety and better staging behavior.
