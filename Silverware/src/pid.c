@@ -62,13 +62,17 @@ float stickTransitionProfileB[3]  = { 0.3 , 0.3 , 0.0};           //keep values 
 
 
 //************************************PIDS****************************************
-
+//Servo Pids for Fixed Wing
+//                         ROLL       PITCH     YAW
+float pidkp[PIDNUMBER] = {21.5e-2 , 21.5e-2  , 10.5e-1 }; 
+float pidki[PIDNUMBER] = { 0  , 0 , 0 };	
+float pidkd[PIDNUMBER] = { 7.4e-1 , 7.4e-1  , 5.5e-1 };
 
 //6mm & 7mm Abduction Pids for whoops (Team Alienwhoop)- set filtering ALIENWHOOP_ZERO_FILTERING or default beta filters
 //                         ROLL       PITCH     YAW
-float pidkp[PIDNUMBER] = {21.5e-2 , 21.5e-2  , 10.5e-1 }; 
-float pidki[PIDNUMBER] = { 14e-1  , 15e-1 , 15e-1 };	
-float pidkd[PIDNUMBER] = { 7.4e-1 , 7.4e-1  , 5.5e-1 };
+//float pidkp[PIDNUMBER] = {21.5e-2 , 21.5e-2  , 10.5e-1 }; 
+//float pidki[PIDNUMBER] = { 14e-1  , 15e-1 , 15e-1 };	
+//float pidkd[PIDNUMBER] = { 7.4e-1 , 7.4e-1  , 5.5e-1 };
 
 
 //BOSS 7 with 716 motors and 46mm Props - set filtering to BETA_FILTERING and adjust pass 1 and pass 2 for KALMAN_GYRO both to 70hz, set DTERM_LPF_2ND_HZ to 120hz, disable motor filtering
@@ -135,6 +139,7 @@ float pidkd_init[PIDNUMBER] = { 0, 0, 0 };
 
 #else  //BRUSHED TARGET
 
+	#ifndef SERVO_OUTPUT
 	// "p term setpoint weighting" 0.0 - 1.0 where 1.0 = normal pid
 	#define ENABLE_SETPOINT_WEIGHTING
 	//            Roll   Pitch   Yaw
@@ -146,6 +151,19 @@ float pidkd_init[PIDNUMBER] = { 0, 0, 0 };
 
 	// limit of integral term (abs)
 	const float integrallimit[PIDNUMBER] = { 1.7 , 1.7 , 0.5 };
+	#else
+		// "p term setpoint weighting" 0.0 - 1.0 where 1.0 = normal pid
+	#define ENABLE_SETPOINT_WEIGHTING
+	//            Roll   Pitch   Yaw
+	float b[3] = { 0.00 , 0.00 , 0.00};   //No pid response to changing setpoint
+
+
+	/// output limit	
+	const float outlimit[PIDNUMBER] = { 1.0 , 1.0 , 1.0 };
+
+	// limit of integral term (abs)
+	const float integrallimit[PIDNUMBER] = { 1.0 , 1.0 , 1.0 };
+	#endif
 	
 #endif
 	
