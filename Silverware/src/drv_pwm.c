@@ -32,6 +32,15 @@
 #endif
 
 #if ( PWMTOP> 65535 ) 
+// under approx 183Hz we add the divider by 20
+	#undef PWMTOP
+	#define PWMTOP (((SYS_CLOCK_FREQ_HZ/20)/PWMFREQ ) - 1)
+	#undef PWM_DIVIDER
+	#define PWM_DIVIDER 20
+	//#warning PWM DIVIDE BY 20 ON
+#endif
+
+#if ( PWMTOP> 65535 ) 
 // approx 183Hz is min frequency
 	#undef PWMTOP
 	#undef PWM_DIVIDER
