@@ -30,13 +30,13 @@
 // *************rate in deg/sec
 // *************for acro mode
 #define MAX_RATE 360.0          //Roll & Pitch axis
-#define MAX_RATEYAW 100.0       //Yaw axis (used in acro and leveling modes)
+#define MAX_RATEYAW 360.0       //Yaw axis (used in acro and leveling modes)
 
 // *************EXPO from 0.00 to 1.00 , 0 = no exp
 // *************positive = less sensitive near center 
-#define ACRO_EXPO_ROLL 0.25
-#define ACRO_EXPO_PITCH 0.25
-#define ACRO_EXPO_YAW 0.10
+#define ACRO_EXPO_ROLL 0.75
+#define ACRO_EXPO_PITCH 0.75
+#define ACRO_EXPO_YAW 0.75
 
 #define ANGLE_EXPO_ROLL 0.55
 #define ANGLE_EXPO_PITCH 0.0
@@ -75,9 +75,9 @@
 
 // *************Radio protocol selection
 // *************select only one
-#define RX_SBUS
+//#define RX_SBUS
 //#define RX_CRSF                                           //Requires tbs firmware v2.88 or newer for failsafe to operate properly
-//#define RX_DSMX_2048
+#define RX_DSMX_2048
 //#define RX_DSM2_1024
 //#define RX_IBUS
 //#define RX_NRF24_BAYANG_TELEMETRY
