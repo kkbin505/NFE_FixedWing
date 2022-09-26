@@ -56,17 +56,17 @@ float stickAcceleratorProfileA[3] = { 0.0 , 0.0 , 0.0};           //keep values 
 float stickTransitionProfileA[3]  = { 0.0 , 0.0 , 0.0};           //keep values between -1 and 1
 
 //pid profile B						 Roll  PITCH  YAW
-float stickAcceleratorProfileB[3] = { 1.5 , 1.5 , 1.0};           //keep values between 0 and 2.5
-float stickTransitionProfileB[3]  = { 0.3 , 0.3 , 0.0};           //keep values between -1 and 1
+float stickAcceleratorProfileB[3] = { 15 , 15 , 15};           //keep values between 0 and 2.5
+float stickTransitionProfileB[3]  = { 0.3 , 0.3 , 0.3};           //keep values between -1 and 1
 
 
 
 //************************************PIDS****************************************
 //Servo Pids for Fixed Wing
 //                         ROLL       PITCH     YAW
-float pidkp[PIDNUMBER] = {21.5e-2 , 21.5e-2  , 10.5e-1 }; 
+float pidkp[PIDNUMBER] = {2.5e-2 , 2.5e-2  , 2.5e-2 }; 
 float pidki[PIDNUMBER] = { 0  , 0 , 0 };	
-float pidkd[PIDNUMBER] = { 7.4e-1 , 7.4e-1  , 5.5e-1 };
+float pidkd[PIDNUMBER] = { 7.4e-2 , 7.4e-2  , 7.4e-2 };
 
 //6mm & 7mm Abduction Pids for whoops (Team Alienwhoop)- set filtering ALIENWHOOP_ZERO_FILTERING or default beta filters
 //                         ROLL       PITCH     YAW
