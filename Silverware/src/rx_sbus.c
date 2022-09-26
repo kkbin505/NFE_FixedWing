@@ -52,7 +52,7 @@ int frame_received = 0;
 int rx_state = 0;
 int bind_safety = 0;
 uint8_t data[25];
-int channels[9];
+int channels[10];
 
 int failsafe_sbus_failsafe = 0;   
 int failsafe_siglost = 0; 
@@ -257,7 +257,7 @@ else
       
 if ( frame_received )
 {
-   int channels[9];
+   int channels[10];
    //decode frame    
    channels[0]  = ((data[1]|data[2]<< 8) & 0x07FF);
    channels[1]  = ((data[2]>>3|data[3]<<5) & 0x07FF);
@@ -268,6 +268,7 @@ if ( frame_received )
    channels[6]  = ((data[9]>>2|data[10]<<6) & 0x07FF);
    channels[7]  = ((data[10]>>5|data[11]<<3) & 0x07FF);
    channels[8]  = ((data[12]|data[13]<< 8) & 0x07FF);
+	 channels[9] = ((data[13] >> 3 | data[14] << 5) & 0x07FF);
 
     if ( rx_state == 0)
     {
@@ -340,6 +341,7 @@ if ( frame_received )
 		    aux[CHAN_7] = (channels[6] > 993) ? 1 : 0;
 		    aux[CHAN_8] = (channels[7] > 993) ? 1 : 0;
 		    aux[CHAN_9] = (channels[8] > 993) ? 1 : 0;
+				aux[CHAN_10] = (channels[9] > 993) ? 1 : 0;			
 
 #ifdef USE_ANALOG_AUX
         // Map to range 0 to 1
@@ -348,18 +350,21 @@ if ( frame_received )
         aux_analog[CHAN_7] = (channels[6] - 173) * 0.000610128f;
         aux_analog[CHAN_8] = (channels[7] - 173) * 0.000610128f;
         aux_analog[CHAN_9] = (channels[8] - 173) * 0.000610128f;
+				aux_analog[CHAN_10] = (channels[9] - 173) * 0.000610128f;
 
         aux_analogchange[CHAN_5] = (aux_analog[CHAN_5] != lastaux_analog[CHAN_5]) ? 1 : 0;
         aux_analogchange[CHAN_6] = (aux_analog[CHAN_6] != lastaux_analog[CHAN_6]) ? 1 : 0;
         aux_analogchange[CHAN_7] = (aux_analog[CHAN_7] != lastaux_analog[CHAN_7]) ? 1 : 0;
         aux_analogchange[CHAN_8] = (aux_analog[CHAN_8] != lastaux_analog[CHAN_8]) ? 1 : 0;
         aux_analogchange[CHAN_9] = (aux_analog[CHAN_9] != lastaux_analog[CHAN_9]) ? 1 : 0;
+				aux_analogchange[CHAN_10] = (aux_analog[CHAN_10] != lastaux_analog[CHAN_10]) ? 1 : 0;
 
         lastaux_analog[CHAN_5] = aux_analog[CHAN_5];
         lastaux_analog[CHAN_6] = aux_analog[CHAN_6];
         lastaux_analog[CHAN_7] = aux_analog[CHAN_7];
         lastaux_analog[CHAN_8] = aux_analog[CHAN_8];
         lastaux_analog[CHAN_9] = aux_analog[CHAN_9];
+				lastaux_analog[CHAN_10] = aux_analog[CHAN_10];
 #endif
         
         time_lastframe = gettime(); 
