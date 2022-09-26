@@ -624,10 +624,10 @@ extern float throttlehpf( float in );
 #ifdef SERVO_OUTPUT
 {
     // stabilized acro mixer
-		mix[MOTOR_FR] = throttle; 															// FR
-		mix[MOTOR_FL] = ((rx[0]+1.0f)/2.0f) + pidoutput[ROLL];  // FL	
-		mix[MOTOR_BR] = ((rx[1]+1.0f)/2.0f) + pidoutput[PITCH]; // BR
-		mix[MOTOR_BL] = ((rx[2]+1.0f)/2.0f) + pidoutput[YAW];		// BL	
+		mix[MOTOR_FR] = throttle; 																			// FR
+		mix[MOTOR_FL] = (((-1 * rx[0])+1.0f)/2.0f) - pidoutput[ROLL];   // FL	
+		mix[MOTOR_BR] = (((-1 * rx[1])+1.0f)/2.0f) - pidoutput[PITCH];  // BR
+		mix[MOTOR_BL] = ((rx[2]+1.0f)/2.0f) + pidoutput[YAW];						// BL	
 }
 #else		
 #ifdef INVERTED_ENABLE
@@ -1000,6 +1000,8 @@ thrsum = 0;		//reset throttle sum for voltage monitoring logic in main loop
 		#ifndef MOTORS_TO_THROTTLE
 		#ifdef SERVO_OUTPUT
 			mix[i] = .001f * ( PWMFREQ + ( PWMFREQ * mix[i] ) ); //Normalize mixer output to servo pulses, compensating for pwm frequency
+			//uncomment the line below to invert the signal when using a brushed FC through the mosfets
+			mix[i] = 1.0f - mix[i];
 		#endif
 		//normal mode
 		pwm_set( i ,motormap( mix[i] ) );
