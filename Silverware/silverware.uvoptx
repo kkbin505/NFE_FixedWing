@@ -140,7 +140,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>ST-LINKIII-KEIL_SWO</Key>
-          <Name>-U56FF6E067267555228271067 -O9422 -SF4000 -C0 -A0 -I0 -HNlocalhost -HP7184 -P2 -N00("ARM CoreSight SW-DP") -D00(0BB11477) -L00(0) -TO272 -TC10000000 -TP21 -TDS8004 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO15 -FD20000000 -FC1000 -FN2 -FF0STM32F0xx_16.FLM -FS08000000 -FL08000 -FP0($$Device:STM32F030F4$CMSIS\Flash\STM32F0xx_16.FLM) -FF1STM32F0xx_OPT.FLM -FS11FFFF800 -FL110 -FP1($$Device:STM32F030F4$CMSIS\Flash\STM32F0xx_OPT.FLM)</Name>
+          <Name>-U56FF6E067267555228271067 -O9422 -SF10000 -C0 -A0 -I0 -HNlocalhost -HP7184 -P2 -N00("ARM CoreSight SW-DP (ARM Core") -D00(0BB11477) -L00(0) -TO272 -TC10000000 -TP21 -TDS8004 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO15 -FD20000000 -FC1000 -FN2 -FF0STM32F0xx_16.FLM -FS08000000 -FL08000 -FP0($$Device:STM32F030F4$CMSIS\Flash\STM32F0xx_16.FLM) -FF1STM32F0xx_OPT.FLM -FS11FFFF800 -FL110 -FP1($$Device:STM32F030F4$CMSIS\Flash\STM32F0xx_OPT.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -208,7 +208,7 @@
         <Ww>
           <count>11</count>
           <WinNumber>1</WinNumber>
-          <ItemText>pidkp</ItemText>
+          <ItemText>pidkp,0x10</ItemText>
         </Ww>
         <Ww>
           <count>12</count>

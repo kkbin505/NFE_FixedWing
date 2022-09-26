@@ -108,7 +108,7 @@
 #define LEVELMODE CHAN_OFF
 #define RACEMODE  CHAN_OFF
 #define HORIZON   CHAN_OFF
-#define PIDPROFILE CHAN_OFF               //For switching stickAccelerator & stickTransition profiles on pid.c page
+#define PIDPROFILE CHAN_9               //For switching stickAccelerator & stickTransition profiles on pid.c page
 #define RATES CHAN_ON
 #define LEDS_ON CHAN_OFF
 
@@ -215,11 +215,11 @@
 //#define PT1_GYRO
 
 //Select Gyro Filter Cut Frequency
-#define GYRO_FILTER_PASS1 HZ_90
-#define GYRO_FILTER_PASS2 HZ_90
+#define GYRO_FILTER_PASS1 HZ_20
+#define GYRO_FILTER_PASS2 HZ_20
 
 //Select D Term Filter Cut Frequency *** Select Only one
-#define  DTERM_LPF_2ND_HZ 100
+#define  DTERM_LPF_2ND_HZ 20
 //#define DTERM_LPF_1ST_HZ 70
 
 //Select Motor Filter Type  (I am no longer using this)
