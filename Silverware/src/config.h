@@ -86,8 +86,8 @@
 
 // *************Transmitter Type Selection
 //#define USE_STOCK_TX
-//#define USE_DEVO
-#define USE_MULTI
+#define USE_DEVO
+//#define USE_MULTI
 
 // *******************************SWITCH SELECTION*****************************
 // *************CHAN_ON - on always ( all protocols)
@@ -109,7 +109,7 @@
 #define RACEMODE  CHAN_OFF
 #define HORIZON   CHAN_OFF
 #define PIDPROFILE CHAN_9               //For switching stickAccelerator & stickTransition profiles on pid.c page
-#define RATES CHAN_ON
+#define RATES CHAN_7
 #define LEDS_ON CHAN_OFF
 
 // *************switch for fpv / other, requires fet
@@ -211,8 +211,8 @@
 #ifdef BETA_FILTERING  //*** ABOVE 100 ADJUST IN INCRIMENTS OF 20, BELOW 100 ADJUST IN INCRIMENTS OF 10, nothing coded beyond 500hz
 
 //Select Gyro Filter Type *** Select Only One type
-#define KALMAN_GYRO
-//#define PT1_GYRO
+//#define KALMAN_GYRO
+#define PT1_GYRO
 
 //Select Gyro Filter Cut Frequency
 #define GYRO_FILTER_PASS1 HZ_20
@@ -326,14 +326,14 @@
 //#define ANALOG_RP_I  CHAN_14
 //#define ANALOG_RP_D  CHAN_15
 //#define ANALOG_RP_PD CHAN_15 // Adjust Roll and Pitch P & D together
-//#define ANALOG_R_P   CHAN_14 // Adjust Roll only
-//#define ANALOG_R_I   CHAN_14
-//#define ANALOG_R_D   CHAN_15
+//#define ANALOG_R_P   CHAN_11 // Adjust Roll only
+//#define ANALOG_R_I   CHAN_11
+//#define ANALOG_R_D   CHAN_12
 //#define ANALOG_P_P   CHAN_14 // Adjust Pitch only
 //#define ANALOG_P_I   CHAN_14
 //#define ANALOG_P_D   CHAN_15
 //#define ANALOG_Y_P   CHAN_14 // Adjust Yaw only
-//#define ANALOG_Y_I   CHAN_14
+//#define ANALOG_Y_I   CHAN_12
 //#define ANALOG_Y_D   CHAN_15
 
 
