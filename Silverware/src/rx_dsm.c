@@ -43,7 +43,7 @@ int rx_bind_enable = 0;
 #define SPEKTRUM_2048_CHANNEL_COUNT     12
 #define SPEKTRUM_1024_CHANNEL_COUNT     7
 #ifdef RX_DSMX_2048
-	#define CHANNEL_COUNT 10
+	#define CHANNEL_COUNT 12
 	#define BIND_PULSES 9
 	// 11 bit frames
 	static uint8_t spek_chan_shift = 3;
@@ -289,7 +289,9 @@ if ( framestarted == 1){
 				aux[CHAN_7] = (channels[6] > 1100) ? 1 : 0;
 				aux[CHAN_8] = (channels[7] > 1100) ? 1 : 0;
 				aux[CHAN_9] = (channels[8] > 1100) ? 1 : 0;
-				aux[CHAN_10] = (channels[9] > 1100) ? 1 : 0;							
+				aux[CHAN_10] = (channels[9] > 1100) ? 1 : 0;
+				aux[CHAN_11] = (channels[10] > 1100) ? 1 : 0;
+				aux[CHAN_12] = (channels[11] > 1100) ? 1 : 0;				
 	#endif
 
 	#ifdef RX_DSM2_1024		
@@ -308,12 +310,14 @@ if ( framestarted == 1){
 	#endif
 
 	#ifdef RX_DSMX_2048
-		aux_analog[CHAN_5] = (channels[4] - 1024.0f) * dsmx_scalefactor;
-		aux_analog[CHAN_6] = (channels[5] - 1024.0f) * dsmx_scalefactor;
-		aux_analog[CHAN_7] = (channels[6] - 1024.0f) * dsmx_scalefactor;
-		aux_analog[CHAN_8] = (channels[7] - 1024.0f) * dsmx_scalefactor;
-		aux_analog[CHAN_9] = (channels[8] - 1024.0f) * dsmx_scalefactor;
-		aux_analog[CHAN_10] = (channels[9] - 1024.0f) * dsmx_scalefactor;
+		aux_analog[CHAN_5] = ((channels[4] - 1024.0f) * dsmx_scalefactor * 0.5f) + 0.5f;
+		aux_analog[CHAN_6] = ((channels[5] - 1024.0f) * dsmx_scalefactor * 0.5f) + 0.5f;
+		aux_analog[CHAN_7] = ((channels[6] - 1024.0f) * dsmx_scalefactor * 0.5f) + 0.5f;
+		aux_analog[CHAN_8] = ((channels[7] - 1024.0f) * dsmx_scalefactor * 0.5f) + 0.5f;
+		aux_analog[CHAN_9] = ((channels[8] - 1024.0f) * dsmx_scalefactor * 0.5f) + 0.5f;
+		aux_analog[CHAN_10] = ((channels[9] - 1024.0f) * dsmx_scalefactor * 0.5f) + 0.5f;
+		aux_analog[CHAN_11] = ((channels[10] - 1024.0f) * dsmx_scalefactor * 0.5f) + 0.5f;
+		aux_analog[CHAN_12] = ((channels[11] - 1024.0f) * dsmx_scalefactor * 0.5f) + 0.5f;
 	#endif
 
 				aux_analogchange[CHAN_5] = (aux_analog[CHAN_5] != lastaux_analog[CHAN_5]) ? 1 : 0;
@@ -323,6 +327,8 @@ if ( framestarted == 1){
 				aux_analogchange[CHAN_8] = (aux_analog[CHAN_8] != lastaux_analog[CHAN_8]) ? 1 : 0;
 				aux_analogchange[CHAN_9] = (aux_analog[CHAN_9] != lastaux_analog[CHAN_9]) ? 1 : 0;
 				aux_analogchange[CHAN_10] = (aux_analog[CHAN_10] != lastaux_analog[CHAN_10]) ? 1 : 0;
+				aux_analogchange[CHAN_11] = (aux_analog[CHAN_11] != lastaux_analog[CHAN_11]) ? 1 : 0;
+				aux_analogchange[CHAN_12] = (aux_analog[CHAN_12] != lastaux_analog[CHAN_12]) ? 1 : 0;
   #endif
 
 				lastaux_analog[CHAN_5] = aux_analog[CHAN_5];
@@ -332,6 +338,8 @@ if ( framestarted == 1){
 				lastaux_analog[CHAN_8] = aux_analog[CHAN_8];
 				lastaux_analog[CHAN_9] = aux_analog[CHAN_9];
 				lastaux_analog[CHAN_10] = aux_analog[CHAN_10];
+				lastaux_analog[CHAN_11] = aux_analog[CHAN_11];
+				lastaux_analog[CHAN_12] = aux_analog[CHAN_12];
   #endif
 #endif
 
