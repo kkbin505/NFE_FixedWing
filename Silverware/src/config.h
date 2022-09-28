@@ -267,7 +267,7 @@
 
 
 //**************joelucid's yaw fix
-#define YAW_FIX
+//#define YAW_FIX
 
 //**************joelucid's transient windup protection.  Removes roll and pitch bounce back after flips
 #define TRANSIENT_WINDUP_PROTECTION
@@ -317,7 +317,7 @@
 // *************    Deviation: channels 13 and 14
 // *************Sbus and DSM can use analog values from any channel
 // *************comment to disable
-//#define USE_ANALOG_AUX
+#define USE_ANALOG_AUX
 // *************Select analog feature for each channel
 // *************comment to disable
 //#define ANALOG_RATE_MULT CHAN_14
@@ -327,13 +327,13 @@
 //#define ANALOG_RP_D  CHAN_15
 //#define ANALOG_RP_PD CHAN_15 // Adjust Roll and Pitch P & D together
 //#define ANALOG_R_P   CHAN_11 // Adjust Roll only
-//#define ANALOG_R_I   CHAN_11
+#define ANALOG_R_I   CHAN_12
 //#define ANALOG_R_D   CHAN_12
 //#define ANALOG_P_P   CHAN_14 // Adjust Pitch only
 //#define ANALOG_P_I   CHAN_14
 //#define ANALOG_P_D   CHAN_15
 //#define ANALOG_Y_P   CHAN_14 // Adjust Yaw only
-//#define ANALOG_Y_I   CHAN_12
+#define ANALOG_Y_I   CHAN_11
 //#define ANALOG_Y_D   CHAN_15
 
 
@@ -353,7 +353,7 @@
 //#define BRUSHLESS_CONVERSION
 
 //enables use of stick accelerator and stick transition for d term lpf 1 & 2
-//#define ADVANCED_PID_CONTROLLER
+#define ADVANCED_PID_CONTROLLER
 
 //Throttle must drop below this value if arming feature is enabled for arming to take place.  MIX_INCREASE_THROTTLE_3 if enabled
 //will also not activate on the ground untill this threshold is passed during takeoff for safety and better staging behavior.

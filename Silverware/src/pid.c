@@ -64,9 +64,9 @@ float stickTransitionProfileB[3]  = { 0.5 , 0.5 , 0.5};           //keep values 
 //************************************PIDS****************************************
 //Servo Pids for Fixed Wing
 //                         ROLL       PITCH     YAW
-float pidkp[PIDNUMBER] = {1.3e-2 , 2.5e-2  , 2.5e-2 }; 
-float pidki[PIDNUMBER] = { 2e-1  , 2e-1 , 2e-1 };	
-float pidkd[PIDNUMBER] = { 1.5e-1 , 3.0e-1  , 3.0e-1 };
+float pidkp[PIDNUMBER] = { 1.94e-2 , 2.5e-2  , 2.5e-2 }; 
+float pidki[PIDNUMBER] = { 0.1e-1  , 0 , 0.1e-1 };	
+float pidkd[PIDNUMBER] = { 2.04e-1 , 3.0e-1  , 3.0e-1 };
 
 //6mm & 7mm Abduction Pids for whoops (Team Alienwhoop)- set filtering ALIENWHOOP_ZERO_FILTERING or default beta filters
 //                         ROLL       PITCH     YAW
@@ -326,7 +326,7 @@ float pid(int x )
 				if ((onground) || (in_air == 0)){
 						ierror[x] *= 0.98f;}
 		}else{
-			  if (onground) ierror[x] *= 0.98f;
+			  if ((onground) || (in_air == 0)) ierror[x] *= 0.98f;
 		}
 
 // pid tuning via analog aux channels
@@ -339,7 +339,7 @@ float pid(int x )
     static int count[3];
     extern float splpf( float in,int num );
     
-    if ( x < 2 && (count[x]++ % 2) == 0 ) {
+    if ( x < 3 && (count[x]++ % 2) == 0 ) {
         avgSetpoint[x] = splpf( setpoint[x], x );
     }
 #endif
@@ -360,13 +360,13 @@ float pid(int x )
     #endif
  
     #ifdef TRANSIENT_WINDUP_PROTECTION
-		if ( x < 2 && fabsf( setpoint[x] - avgSetpoint[x] ) > 0.1f ) {
+		if ( x < 3 && fabsf( setpoint[x] - avgSetpoint[x] ) > 0.1f ) {
 			iwindup = 1;
 		}
     #endif
 		
     if ( !iwindup)
-    {
+    {		
         #ifdef MIDPOINT_RULE_INTEGRAL
          // trapezoidal rule instead of rectangular
         ierror[x] = ierror[x] + (error[x] + lasterror[x]) * 0.5f *  pidki[x] * looptime;
@@ -379,12 +379,15 @@ float pid(int x )
         #endif
             
         #ifdef SIMPSON_RULE_INTEGRAL
+				//Base Integral off Gyro and not error...aka assume setoint is always 0
         // assuming similar time intervals
-        ierror[x] = ierror[x] + 0.166666f* (lasterror2[x] + 4*lasterror[x] + error[x]) *  pidki[x] * looptime;	
+        ierror[x] = ierror[x] + 0.166666f* (lasterror2[x] + 4*lasterror[x] - gyro[x]) *  pidki[x] * looptime;	
         lasterror2[x] = lasterror[x];
-        lasterror[x] = error[x];
+        lasterror[x] = -gyro[x];
         #endif					
-    }
+    } else {
+				ierror[x] *= 0.98f;	//reduce I - error towards 0 quickly while sticks are moving
+		}
             
     limitf( &ierror[x] , integrallimit[x] );
     
