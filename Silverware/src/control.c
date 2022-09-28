@@ -625,9 +625,9 @@ extern float throttlehpf( float in );
 {
     // stabilized acro mixer
 		mix[MOTOR_FR] = throttle; 																			// FR
-		mix[MOTOR_FL] = (((-1 * rx[0])+1.0f)/2.0f) - pidoutput[ROLL];   // FL	
-		mix[MOTOR_BR] = (((-1 * rx[1])+1.0f)/2.0f) - pidoutput[PITCH];  // BR
-		mix[MOTOR_BL] = ((rx[2]+1.0f)/2.0f) + pidoutput[YAW];						// BL	
+		mix[MOTOR_FL] = (((-1 * rxcopy[0])+1.0f)/2.0f) - pidoutput[ROLL];   // FL	
+		mix[MOTOR_BR] = (((-1 * rxcopy[1])+1.0f)/2.0f) - pidoutput[PITCH];  // BR
+		mix[MOTOR_BL] = ((rxcopy[2]+1.0f)/2.0f) + pidoutput[YAW];						// BL	
 }
 #else		
 #ifdef INVERTED_ENABLE
@@ -1018,12 +1018,11 @@ thrsum = 0;		//reset throttle sum for voltage monitoring logic in main loop
 //***********************End Motor PWM Command Logic
 		
 //***********************Clip mmixer outputs (if not already done) before applying calculating throttle sum
-		if ( mix[i] < 0 ) mix[i] = 0;
-		if ( mix[i] > 1 ) mix[i] = 1;
-		thrsum+= mix[i];
+		//if ( mix[i] < 0 ) mix[i] = 0;    TODO:  Figure out if it is smart to apply these limits
+		//if ( mix[i] > 1 ) mix[i] = 1;
 		}	
 // end of for-loop to send motor PWM commands
-		thrsum = thrsum / 4;		//calculate throttle sum for voltage monitoring logic in main loop		
+		thrsum = throttle;		//calculate throttle sum for voltage monitoring logic in main loop		
 	}
 // end motors on
 	
