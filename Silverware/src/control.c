@@ -999,6 +999,9 @@ thrsum = 0;		//reset throttle sum for voltage monitoring logic in main loop
 		#ifndef NOMOTORS
 		#ifndef MOTORS_TO_THROTTLE
 		#ifdef SERVO_OUTPUT
+		//***********************Clip mmixer outputs 
+			if ( mix[i] < 0 ) mix[i] = 0;    
+			if ( mix[i] > 1 ) mix[i] = 1;
 			mix[i] = .001f * ( PWMFREQ + ( PWMFREQ * mix[i] ) ); //Normalize mixer output to servo pulses, compensating for pwm frequency
 			//uncomment the line below to invert the signal when using a brushed FC through the mosfets
 			mix[i] = 1.0f - mix[i];
@@ -1016,10 +1019,6 @@ thrsum = 0;		//reset throttle sum for voltage monitoring logic in main loop
 		tempx[i] = motormap( mix[i] );
 		#endif
 //***********************End Motor PWM Command Logic
-		
-//***********************Clip mmixer outputs (if not already done) before applying calculating throttle sum
-		//if ( mix[i] < 0 ) mix[i] = 0;    TODO:  Figure out if it is smart to apply these limits
-		//if ( mix[i] > 1 ) mix[i] = 1;
 		}	
 // end of for-loop to send motor PWM commands
 		thrsum = throttle;		//calculate throttle sum for voltage monitoring logic in main loop		
