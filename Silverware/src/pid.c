@@ -65,7 +65,7 @@ float stickTransitionProfileB[3]  = { 0.5 , 0.5 , 0.5};           //keep values 
 //Servo Pids for Fixed Wing
 //                         ROLL       PITCH     YAW
 float pidkp[PIDNUMBER] = { 1.94e-2 , 2.5e-2  , 2.5e-2 }; 
-float pidki[PIDNUMBER] = { 0.1e-1  , 0 , 0.1e-1 };	
+float pidki[PIDNUMBER] = { 1.1e-1  , 0 , 1.1e-1 };	
 float pidkd[PIDNUMBER] = { 2.04e-1 , 3.0e-1  , 3.0e-1 };
 
 //6mm & 7mm Abduction Pids for whoops (Team Alienwhoop)- set filtering ALIENWHOOP_ZERO_FILTERING or default beta filters
@@ -162,7 +162,7 @@ float pidkd_init[PIDNUMBER] = { 0, 0, 0 };
 	const float outlimit[PIDNUMBER] = { 1.0 , 1.0 , 1.0 };
 
 	// limit of integral term (abs)
-	const float integrallimit[PIDNUMBER] = { 1.0 , 1.0 , 1.0 };
+	const float integrallimit[PIDNUMBER] = { 0.1 , 0.1 , 0.1 };		//Airplanes are already stable so treat I like trim and limit to 10% or maybe even less.  This might allow for higher gains
 	#endif
 	
 #endif
@@ -361,7 +361,7 @@ float pid(int x )
  
     #ifdef TRANSIENT_WINDUP_PROTECTION
 		if ( x < 3 && fabsf( setpoint[x] - avgSetpoint[x] ) > 0.1f ) {
-			iwindup = 1;
+			iwindup = 2;
 		}
     #endif
 		
@@ -386,7 +386,7 @@ float pid(int x )
         lasterror[x] = -gyro[x];
         #endif					
     } else {
-				ierror[x] *= 0.98f;	//reduce I - error towards 0 quickly while sticks are moving
+				if ( iwindup == 2) ierror[x] *= 0.98f;	//reduce I - error towards 0 quickly while sticks are moving
 		}
             
     limitf( &ierror[x] , integrallimit[x] );
