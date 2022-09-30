@@ -308,7 +308,7 @@
 // *************This define will allow you to check if your radio is reaching 100% throws entering <RIGHT-RIGHT-DOWN> gesture
 // ************* will disable throttle and will rapid blink the led when sticks are moved to 100% throws
 // *************entering <LEFT-LEFT-DOWN> will return the quad to normal operation.
-#define STICK_TRAVEL_CHECK
+//#define STICK_TRAVEL_CHECK
 
 // *************ANALOG AUX CHANNELS
 // *************For some protocols, use Tx channels as auxiliary analog values

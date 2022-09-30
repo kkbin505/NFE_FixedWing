@@ -50,7 +50,6 @@ THE SOFTWARE.
 // stick deflection and is reduced by whatever percentage you enter here at stick center.  For example accelerator at 1 and transition at .3 means that there will be 30% reduction 
 // of acceleration at stick center, and acceleration strength of 1 at full stick.
 
-
 //pid profile A						 Roll  PITCH  YAW
 float stickAcceleratorProfileA[3] = { 0.0 , 0.0 , 0.0};           //keep values between 0 and 2.5
 float stickTransitionProfileA[3]  = { 0.0 , 0.0 , 0.0};           //keep values between -1 and 1
@@ -65,7 +64,7 @@ float stickTransitionProfileB[3]  = { 0.5 , 0.5 , 0.5};           //keep values 
 //Servo Pids for Fixed Wing
 //                         ROLL       PITCH     YAW
 float pidkp[PIDNUMBER] = { 1.94e-2 , 2.5e-2  , 2.5e-2 }; 
-float pidki[PIDNUMBER] = { 1.1e-1  , 0 , 1.1e-1 };	
+float pidki[PIDNUMBER] = { 1.1e-1  , 0.5e-1 , 1.1e-1 };	
 float pidkd[PIDNUMBER] = { 2.04e-1 , 3.0e-1  , 3.0e-1 };
 
 //6mm & 7mm Abduction Pids for whoops (Team Alienwhoop)- set filtering ALIENWHOOP_ZERO_FILTERING or default beta filters
@@ -162,7 +161,7 @@ float pidkd_init[PIDNUMBER] = { 0, 0, 0 };
 	const float outlimit[PIDNUMBER] = { 1.0 , 1.0 , 1.0 };
 
 	// limit of integral term (abs)
-	const float integrallimit[PIDNUMBER] = { 0.1 , 0.1 , 0.1 };		//Airplanes are already stable so treat I like trim and limit to 10% or maybe even less.  This might allow for higher gains
+	const float integrallimit[PIDNUMBER] = { 0.1 , 0.05 , 0.1 };		//Airplanes are already stable so treat I like trim and limit to 10% or maybe even less.  This might allow for higher gains
 	#endif
 	
 #endif
@@ -320,6 +319,7 @@ void apply_analog_aux_to_pids()
 // pid calculation for acro ( rate ) mode
 // input: error[x] = setpoint - gyro
 // output: pidoutput[x] = change required from motors
+
 float pid(int x )
 { 
     if ((aux[LEVELMODE]) && (!aux[RACEMODE])){
@@ -333,38 +333,54 @@ float pid(int x )
 #ifdef ANALOG_AUX_PIDS
     apply_analog_aux_to_pids();
 #endif
-		
+
+		//make the default state to not accumulate I
+    int iwindup = 1;
 #ifdef TRANSIENT_WINDUP_PROTECTION
     static float avgSetpoint[3];
     static int count[3];
     extern float splpf( float in,int num );
-    
+    extern float rxcopy[4];
+				
+// Calculate an autocentered adjustment to the sticks		*********** The performance of this algorithm is critical to I gain working properly in SPORT/ACRO mode... and I don't trust it fully*********
+		static float autocenter[3];
+		static float lastrx[3];
+		static unsigned int consecutive[3];
+		static float rx_centered[3];
+		rx_centered[x] = (rxcopy[x] - autocenter[x]);
+		limitf(&rx_centered[x], 1.0);
+		if ( rxcopy[x] == lastrx[x] ){
+			consecutive[x]++;
+		}else{
+			consecutive[x] = 0;
+		}
+		lastrx[x] = rxcopy[x];
+		if ( consecutive[x] > 750 && fabsf( rxcopy[x]) < 0.1f ){
+			autocenter[x] = rxcopy[x];
+		}
+		
+//Check for defelction against the autocentered stick value (if raw sticks are in the 10% range		
+		if (x < 3 && fabsf(rxcopy[x]) < 0.10f){																	//if sticks are in trimable range near center - we might allow I term to fight rotation	
+			if (fabsf( rx_centered[x] ) < 0.01f) {																//allow i term to build if sticks are very close to not moving at all
+				iwindup = 0;					 																																
+			}else{																																//otherwise sticks are deflected so freeze I term - maybe in the future check to see if the deflection is pushing against or with I term
+				iwindup = 1;
+			}
+		}
+		//Calculate average setpoint
     if ( x < 3 && (count[x]++ % 2) == 0 ) {
         avgSetpoint[x] = splpf( setpoint[x], x );
     }
-#endif
-		
-    int iwindup = 0;
-    if (( pidoutput[x] == outlimit[x] )&& ( error[x] > 0) )
-    {
-        iwindup = 1;		
-    }
-    
-    if (( pidoutput[x] == -outlimit[x])&& ( error[x] < 0) )
-    {
-        iwindup = 1;				
-    } 
-    
-    #ifdef ANTI_WINDUP_DISABLE
-    iwindup = 0;
-    #endif
- 
-    #ifdef TRANSIENT_WINDUP_PROTECTION
+
 		if ( x < 3 && fabsf( setpoint[x] - avgSetpoint[x] ) > 0.1f ) {
 			iwindup = 2;
 		}
-    #endif
-		
+#endif		
+
+#ifdef ANTI_WINDUP_DISABLE
+		iwindup = 0;
+#endif
+ 		
     if ( !iwindup)
     {		
         #ifdef MIDPOINT_RULE_INTEGRAL
@@ -403,7 +419,9 @@ float pid(int x )
     #endif	
 		
     // I term	
-    pidoutput[x] += ierror[x];
+		if (aux[CH_AUX1]){
+			pidoutput[x] += ierror[x];
+		}
 
     // D term
     // skip yaw D term if not set               
