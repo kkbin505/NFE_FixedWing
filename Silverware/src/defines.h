@@ -76,6 +76,11 @@
 #define CH_AUX3 CH_OFF
 #define CH_AUX4 CH_OFF
 
+// *************Transmitter Type Selection
+//#define USE_STOCK_TX
+#define USE_DEVO
+//#define USE_MULTI
+
 #ifdef USE_DEVO
 // devo tx channel mapping
 // also for nr24multipro
@@ -87,8 +92,8 @@
 #define CHAN_10 CH_RTH
 #define CHAN_11 CH_TO
 #define CHAN_12 CH_EMG
-#define CHAN_13 CH_ANA_AUX1
-#define CHAN_14 CH_ANA_AUX2
+#define CHAN_14 CH_ANA_AUX1
+#define CHAN_15 CH_ANA_AUX2
 #define CHAN_ON CH_ON
 #define CHAN_OFF CH_OFF
 #endif
@@ -101,10 +106,10 @@
 #define CHAN_8 CH_VID
 #define CHAN_9 CH_HEADFREE
 #define CHAN_10 CH_INV
-#define CHAN_12 CH_TO
-#define CHAN_13 CH_EMG
-#define CHAN_14 CH_ANA_AUX1
-#define CHAN_15 CH_ANA_AUX2
+#define CHAN_11 CH_TO
+#define CHAN_12 CH_EMG
+#define CHAN_13 CH_ANA_AUX1
+#define CHAN_14 CH_ANA_AUX2
 #define CHAN_ON CH_ON
 #define CHAN_OFF CH_OFF
 #endif
@@ -120,6 +125,26 @@
 #define CHAN_OFF CH_OFF
 #endif
 
+// *************Select your preffered rate calculation format (define only one)
+#define SILVERWARE_RATES
+//#define BETAFLIGHT_RATES
+
+// *************rate in deg/sec
+// *************for acro mode
+#define MAX_RATE 360.0          //Roll & Pitch axis
+#define MAX_RATEYAW 360.0       //Yaw axis (used in acro and leveling modes)
+
+#ifdef BETAFLIGHT_RATES
+#define BF_RC_RATE_ROLL 1.00
+#define BF_RC_RATE_PITCH 1.00
+#define BF_RC_RATE_YAW 1.00
+#define BF_SUPER_RATE_ROLL 0.70
+#define BF_SUPER_RATE_PITCH 0.70
+#define BF_SUPER_RATE_YAW 0.70
+#define BF_EXPO_ROLL 0.00
+#define BF_EXPO_PITCH 0.00
+#define BF_EXPO_YAW 0.00
+#endif
 
 #ifdef BETAFLIGHT_RATES
 #define ACRO_EXPO_ROLL BF_EXPO_ROLL

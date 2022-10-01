@@ -1,6 +1,6 @@
 
 
-//Universal pids are already loaded for 6mm and 7mm whoops by default.  Adjust pids in pid.c file for any non whoop builds.  
+ 
 
 //**********************************************************************************************************************
 //***********************************************HARDWARE SELECTION*****************************************************
@@ -16,21 +16,13 @@
 //#define Silverlite_Brushless
 #define Alienwhoop_ZERO  
 
-
+// *************It is possible to get a servo signal out of the M- motor pad on a brushed flight controller by inverting
+// *************the signal and adding a 10k pullup resistor from M- to 5v+.  Uncomment below if this hardware hack has been performed.
+#define PWM_MOSFET_INVERSION
 
 
 //**********************************************************************************************************************
 //***********************************************RATES & EXPO SETTINGS**************************************************
-
-// *************Select your preffered rate calculation format (define only one)
-#define SILVERWARE_RATES
-//#define BETAFLIGHT_RATES
-
-#ifdef SILVERWARE_RATES
-// *************rate in deg/sec
-// *************for acro mode
-#define MAX_RATE 360.0          //Roll & Pitch axis
-#define MAX_RATEYAW 360.0       //Yaw axis (used in acro and leveling modes)
 
 // *************EXPO from 0.00 to 1.00 , 0 = no exp
 // *************positive = less sensitive near center 
@@ -41,31 +33,12 @@
 #define ANGLE_EXPO_ROLL 0.55
 #define ANGLE_EXPO_PITCH 0.0
 #define ANGLE_EXPO_YAW 0.55
-#endif
-
-#ifdef BETAFLIGHT_RATES
-#define BF_RC_RATE_ROLL 1.00
-#define BF_RC_RATE_PITCH 1.00
-#define BF_RC_RATE_YAW 1.00
-#define BF_SUPER_RATE_ROLL 0.70
-#define BF_SUPER_RATE_PITCH 0.70
-#define BF_SUPER_RATE_YAW 0.70
-#define BF_EXPO_ROLL 0.00
-#define BF_EXPO_PITCH 0.00
-#define BF_EXPO_YAW 0.00
-#endif
-
-
 
 // *************max angle for level mode
-#define LEVEL_MAX_ANGLE 65.0f
+#define LEVEL_MAX_ANGLE 45.0f
 
 // ************* low rates multiplier if rates are assigned to a channel
 #define LOW_RATES_MULTI 0.5f
-
-// *************transmitter stick adjustable deadband for roll/pitch/yaw
-// *************.01f = 1% of stick range - comment out to disable
-//#define STICKS_DEADBAND .01f
 
 
 
@@ -84,10 +57,7 @@
 //#define RX_BAYANG_BLE_APP
 //#define RX_BAYANG_PROTOCOL_TELEMETRY_AUTOBIND
 
-// *************Transmitter Type Selection
-//#define USE_STOCK_TX
-#define USE_DEVO
-//#define USE_MULTI
+
 
 // *******************************SWITCH SELECTION*****************************
 // *************CHAN_ON - on always ( all protocols)
@@ -122,11 +92,29 @@
 // *************if no channel is assigned but buzzer is set to CHAN_ON - buzzer will activate on LVC and FAILSAFE.
 //#define BUZZER_ENABLE CHAN_OFF
 
-// *************start in level mode for toy tx.  Must comment out STICK_TRAVEL_CHECK to assign CH_AUX1 to an aux feature
+// *************LLD / RRD Stick Gesture - AUX 1 is currently tied to integral activity in SPORT/ACRO mode.  Uncommented will boot the FC 
+// *************with integral inactive and require the RRD for fully stabilized SPORT/ACRO mode with integral.  It is suggested to maiden and
+// *************manually trim the plane with AUX1 in the OFF position.
 //#define AUX1_START_ON
 
-// *************automatically remove center bias in toy tx ( needs throttle off for 1 second )
-//#define STOCK_TX_AUTOCENTER
+// *************ANALOG AUX CHANNELS
+#define USE_ANALOG_AUX
+// *************Select analog feature for each channel
+//#define ANALOG_RATE_MULT CHAN_14
+//#define ANALOG_MAX_ANGLE CHAN_15
+//#define ANALOG_RP_P  CHAN_14 // Adjust Roll and Pitch together
+//#define ANALOG_RP_I  CHAN_14
+//#define ANALOG_RP_D  CHAN_15
+//#define ANALOG_RP_PD CHAN_15 // Adjust Roll and Pitch P & D together
+//#define ANALOG_R_P   CHAN_11 // Adjust Roll only
+#define ANALOG_R_I   CHAN_12
+//#define ANALOG_R_D   CHAN_12
+//#define ANALOG_P_P   CHAN_14 // Adjust Pitch only
+//#define ANALOG_P_I   CHAN_14
+//#define ANALOG_P_D   CHAN_15
+//#define ANALOG_Y_P   CHAN_14 // Adjust Yaw only
+#define ANALOG_Y_I   CHAN_11
+//#define ANALOG_Y_D   CHAN_15
 
 
 
@@ -178,29 +166,8 @@
 //**********************************************************************************************************************
 //***********************************************FILTER SETTINGS********************************************************
 
-// *************The following is the new "beta" testing filter set.  Taking lesson from betaflight ... it seems very effective to stack 1st order filters
-// *************and gives outstanding adjustability as you can stagger the first and second passes at different values as opposed to being constrained by
-// ************* a second order filter at a single cut frequency.  Go test and see what you like, and report back if you feel so inclined.  I have not actually staggered my
-// ************* filters yet and the filters listed below are what I am flying on my whoop so far.  For my boss 7, I am changing both pass 1 and 2 to HZ_70, and  
-// ************* setting the D 2nd filter to 120hz.  FYI, whoops seem to have one noise peak somewhere around 150 to 200hz and another one closer to 400 to 500hz.  
-// *************  For my brushless 4" I am running one gyro pass at 90hz, the second gyro pass at 140hz, and the 1st order D filter at 70hz. On all of these crafts I have
-// *************  been able to totally eliminate the need for any motor output filtering.  It will remain in the code as an available option for now, but I hope to be able to remove
-// *************  it completely from the code soon if testing continues to go well.  My thoughts on motor output filtering are here https://community.micro-motor-warehouse.com/t/notfastenuf-e011-bwhoop-silverware-fork/5501/1388?u=notfastenuf
-// *************  To adjust your filters if you so desire - use these basic observations I have made:  Noise will be obvious by motors that dont want to throttle down immediately or at all.  Too much filtering will be obvious
-// ************* by propwash and eventually P oscillations if you really push it too far
-// *************  
-// *************  At this point I feel very optimistic about this gyro filter configuration. I hope we can all work together to establish the best whoop defaults possible.
-// *************  If you want to help, try to tweak in the values on pass 1 and 2 for something that runs 6 and 7mm really clean.  Go slap on some bent
-// ************* props, or find some of those garbage off balance 3 blade abominations that the stock zero tune hates so much.  Lets see what we can make possible and find the limits.
-// *************  Lets also see if in the end - can we say that this flies better than the previous stock filter setup.  Remember, tolerating more bent or bad props is great but
-// *************  only if it doesnt compromise the feel or performance we are used to when the equipment is good.  Personally I think this already feels better and handles better ... but I have only just begun exploring different filtering values.
-// ************* Feel free to unselect BETA_FILTERING and return to ALIENWHOOP_ZERO_FILTERING here for comparison to stock.  I think/hope that this will work well enough that even the
-// ************* prefilled filter sets can be eventually abandoned in favor of one decent set of defaults that fly most everything very well
-// *************
-// *************  FINAL NOTE: If you want to try running only one gyro pass, you can comment out either pass one or pass two.  Next revision will have split 1st order D term filter 
-// *************  passes just like the gyro in place of 2nd order filtering.      Thanks - NFE
-
-
+// *************Filtering for fixed wing airplanes should be somewhere near 20hz
+// *************Exactly how many passes of filtering are probably dependent on the hardware filter setting inside the gyro
 
 //#define WEAK_FILTERING
 //#define STRONG_FILTERING
@@ -222,10 +189,31 @@
 #define  DTERM_LPF_2ND_HZ 20
 //#define DTERM_LPF_1ST_HZ 70
 
-//Select Motor Filter Type  (I am no longer using this)
-//#define MOTOR_FILTER2_ALPHA MFILT1_HZ_90
 
 #endif
+
+
+
+
+//**********************************************************************************************************************
+//***********************************************SERVO OUTPUT SETTINGS**************************************************
+
+// *************pwm frequency for motor control
+// *************a higher frequency makes the servos work harder nd is only reccomended for digital servos
+// *************in Hz
+#define PWMFREQ 50
+
+// *************torque boost is a highly eperimental feature.  it is a lpf D term on motor outputs that will accelerate the response
+// *************of the motors when the command to the motors is changing by increasing or decreasing the voltage thats sent.  It differs
+// *************from throttle transient compensation in that it acts on all motor commands - not just throttle changes.  this feature
+// *************is very noise sensative so D term specifically has to be lowered and gyro/d filtering may need to be increased.
+// *************reccomendation right now is to leave boost at or below 2, drop your p gains a few points, then cut your D in half and 
+// *************retune it back up to where it feels good.  I'm finding about 60 to 65% of my previous D value seems to work.
+//#define TORQUE_BOOST 1.0		//untested on servos
+
+// *************invert yaw pid for "PROPS OUT" configuration - This feature is switchable to "PROPS IN" when active with stick gesture DOWN-UP-DOWN, Save selection with DOWN-DOWN-DOWN
+//#define INVERT_YAW_PID			//untested on servos
+
 
 
 
@@ -234,43 +222,11 @@
 
 // minimum motor output: *for brushed a % value (0.0 - 100.0)   *for brushless this sets digital idle % for DSHOT for any selection
 //#define MOTOR_MIN_COMMAND  5.0
-
-// *************invert yaw pid for "PROPS OUT" configuration - This feature is switchable to "PROPS IN" when active with stick gesture DOWN-UP-DOWN, Save selection with DOWN-DOWN-DOWN
-//#define INVERT_YAW_PID
-
-// *************pwm frequency for motor control
-// *************a higher frequency makes the motors more linear
-// *************in Hz
-#define PWMFREQ 50
-
-// *************clip feedforward attempts to resolve issues that occur near full throttle by adding any clipped motor commands to the next loop output
-//#define CLIP_FF
-
-// *************torque boost is a highly eperimental feature.  it is a lpf D term on motor outputs that will accelerate the response
-// *************of the motors when the command to the motors is changing by increasing or decreasing the voltage thats sent.  It differs
-// *************from throttle transient compensation in that it acts on all motor commands - not just throttle changes.  this feature
-// *************is very noise sensative so D term specifically has to be lowered and gyro/d filtering may need to be increased.
-// *************reccomendation right now is to leave boost at or below 2, drop your p gains a few points, then cut your D in half and 
-// *************retune it back up to where it feels good.  I'm finding about 60 to 65% of my previous D value seems to work.
-//#define TORQUE_BOOST 1.0
-
+	
 // *************makes throttle feel more poppy - can intensify small throttle imbalances visible in FPV if factor is set too high
 //#define THROTTLE_TRANSIENT_COMPENSATION 
 //#define THROTTLE_TRANSIENT_COMPENSATION_FACTOR 4.0 
- 
-// *************throttle angle compensation in level mode
-//#define AUTO_THROTTLE
 
-// *************mix lower throttle reduces thrust imbalances by reducing throttle proportionally to the adjustable reduction percent
-// *************mix increase throttle increases the authority of the pid controller at lowest throttle values like airmode when combined with idle up
-// *************mix3 has a stronger effect and works better with brushless
-
-
-//**************joelucid's yaw fix
-//#define YAW_FIX
-
-//**************joelucid's transient windup protection.  Removes roll and pitch bounce back after flips
-#define TRANSIENT_WINDUP_PROTECTION
 
 
 
@@ -278,7 +234,7 @@
 //***********************************************ADDITIONAL FEATURES****************************************************
 
 // *************lost quad beeps using motors (30 sec timeout) - pulses motors after timeout period to help find a lost model
-//#define MOTOR_BEEPS
+//#define MOTOR_BEEPS		//untested on servos
 
 // *************0 - 7 - power for telemetry
 #define TX_POWER 7
@@ -300,41 +256,7 @@
 
 
 
-// *************enable inverted flight code ( brushless only )
-//#define INVERTED_ENABLE
-//#define FN_INVERTED CH_OFF //for brushless only
 
-// *************SPECIAL TEST MODE TO CHECK TRANSMITTER STICK THROWS
-// *************This define will allow you to check if your radio is reaching 100% throws entering <RIGHT-RIGHT-DOWN> gesture
-// ************* will disable throttle and will rapid blink the led when sticks are moved to 100% throws
-// *************entering <LEFT-LEFT-DOWN> will return the quad to normal operation.
-//#define STICK_TRAVEL_CHECK
-
-// *************ANALOG AUX CHANNELS
-// *************For some protocols, use Tx channels as auxiliary analog values
-// *************Bayang with analog aux protocol (Tx optional mode enabled in modified Multimodule and DeviationTx) has two analog channels available:
-// *************    Multimodule: channels 14 and 15
-// *************    Deviation: channels 13 and 14
-// *************Sbus and DSM can use analog values from any channel
-// *************comment to disable
-#define USE_ANALOG_AUX
-// *************Select analog feature for each channel
-// *************comment to disable
-//#define ANALOG_RATE_MULT CHAN_14
-//#define ANALOG_MAX_ANGLE CHAN_15
-//#define ANALOG_RP_P  CHAN_14 // Adjust Roll and Pitch together
-//#define ANALOG_RP_I  CHAN_14
-//#define ANALOG_RP_D  CHAN_15
-//#define ANALOG_RP_PD CHAN_15 // Adjust Roll and Pitch P & D together
-//#define ANALOG_R_P   CHAN_11 // Adjust Roll only
-#define ANALOG_R_I   CHAN_12
-//#define ANALOG_R_D   CHAN_12
-//#define ANALOG_P_P   CHAN_14 // Adjust Pitch only
-//#define ANALOG_P_I   CHAN_14
-//#define ANALOG_P_D   CHAN_15
-//#define ANALOG_Y_P   CHAN_14 // Adjust Yaw only
-#define ANALOG_Y_I   CHAN_11
-//#define ANALOG_Y_D   CHAN_15
 
 
 
@@ -349,8 +271,8 @@
 //Everything for servos depends on this define - do not turn it off
 #define SERVO_OUTPUT
 
-// *************DEFINE FLIGHT CONTROLLER HARDWARE HAS BEEN MODIFIED FOR BRUSHLESS CONVERSION   **WARNING**DO NOT ENABLE DSHOT DMA ESC DRIVER WITH BRUSHED MOTORS ATTACHED**
-//#define BRUSHLESS_CONVERSION
+//**************NFE's transient windup protection.  Allows use of integral gains in Sport/Acro mode 
+#define TRANSIENT_WINDUP_PROTECTION
 
 //enables use of stick accelerator and stick transition for d term lpf 1 & 2
 #define ADVANCED_PID_CONTROLLER
@@ -377,7 +299,7 @@
 // throttle direct to motors for thrust measure
 //#define MOTORS_TO_THROTTLE
 
-// throttle direct to motors for thrust measure as a flight mode
+// throttle direct to motors for thrust measure as a flight mode		************ this could be turned into manual mode
 //#define MOTORS_TO_THROTTLE_MODE CHAN_OFF
 
 // rxdebug structure
@@ -390,5 +312,44 @@
 
 
 
+
+//#############################################################################################################################
+//#############################################################################################################################
+// to be removed
+// things that are useless in a airplane
+//#############################################################################################################################
+//#############################################################################################################################
+
+// *************transmitter stick adjustable deadband for roll/pitch/yaw
+// *************.01f = 1% of stick range - comment out to disable
+//#define STICKS_DEADBAND .01f
+
+// *************DEFINE FLIGHT CONTROLLER HARDWARE HAS BEEN MODIFIED FOR BRUSHLESS CONVERSION   **WARNING**DO NOT ENABLE DSHOT DMA ESC DRIVER WITH BRUSHED MOTORS ATTACHED**
+//#define BRUSHLESS_CONVERSION
+
+// *************automatically remove center bias in toy tx ( needs throttle off for 1 second )
+//#define STOCK_TX_AUTOCENTER
+
+//Select Motor Filter Type  (I am no longer using this)
+//#define MOTOR_FILTER2_ALPHA MFILT1_HZ_90
+
+// *************clip feedforward attempts to resolve issues that occur near full throttle by adding any clipped motor commands to the next loop output
+//#define CLIP_FF
+ 
+// *************throttle angle compensation in level mode
+//#define AUTO_THROTTLE
+
+//**************joelucid's yaw fix
+//#define YAW_FIX
+
+// *************enable inverted flight code ( brushless only )
+//#define INVERTED_ENABLE
+//#define FN_INVERTED CH_OFF //for brushless only
+
+// *************SPECIAL TEST MODE TO CHECK TRANSMITTER STICK THROWS
+// *************This define will allow you to check if your radio is reaching 100% throws entering <RIGHT-RIGHT-DOWN> gesture
+// ************* will disable throttle and will rapid blink the led when sticks are moved to 100% throws
+// *************entering <LEFT-LEFT-DOWN> will return the quad to normal operation.
+//#define STICK_TRAVEL_CHECK
 
 

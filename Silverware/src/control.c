@@ -1003,8 +1003,10 @@ thrsum = 0;		//reset throttle sum for voltage monitoring logic in main loop
 			if ( mix[i] < 0 ) mix[i] = 0;    
 			if ( mix[i] > 1 ) mix[i] = 1;
 			mix[i] = .001f * ( PWMFREQ + ( PWMFREQ * mix[i] ) ); //Normalize mixer output to servo pulses, compensating for pwm frequency
-			//uncomment the line below to invert the signal when using a brushed FC through the mosfets
+		#ifdef PWM_MOSFET_INVERSION	
+			//the line below inverts the signal when using a brushed FC through the mosfets
 			mix[i] = 1.0f - mix[i];
+		#endif
 		#endif
 		//normal mode
 		pwm_set( i ,motormap( mix[i] ) );
