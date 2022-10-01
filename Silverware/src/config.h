@@ -74,7 +74,6 @@
 //*************channel is on, or racemodeHORIZON if both channels are on - and will be standard LEVELMODE if neither 
 //*************racemode or horizon are switched on.
 #define ARMING CHAN_5
-#define IDLE_UP CHAN_5
 #define LEVELMODE CHAN_OFF
 #define RACEMODE  CHAN_OFF
 #define HORIZON   CHAN_OFF
@@ -125,8 +124,6 @@
 // ************* Set your lipo cell count to override auto cell count detect logic
 //#define LIPO_CELL_COUNT 1
 
-// ************* Raises pids automatically as battery voltage drops in flight.  Ensure voltage is calibrated before use ****CRITICAL****.
-//#define PID_VOLTAGE_COMPENSATION
 #define LEVELMODE_PID_ATTENUATION 0.90f  //used to prevent oscillations in angle modes with pid_voltage_compensation enabled due to high pids
 
 // *************lower throttle when battery below threshold - forced landing low voltage cutoff
@@ -308,6 +305,9 @@
 // debug things ( debug struct and other)
 //#define DEBUG
 
+//Do not uncomment this - it changes the 0 throttle behavior regarding inair flags 
+#define IDLE_UP ARMING
+
 
 
 
@@ -352,4 +352,6 @@
 // *************entering <LEFT-LEFT-DOWN> will return the quad to normal operation.
 //#define STICK_TRAVEL_CHECK
 
+// ************* Raises pids automatically as battery voltage drops in flight.  Ensure voltage is calibrated before use ****CRITICAL****.
+//#define PID_VOLTAGE_COMPENSATION
 
