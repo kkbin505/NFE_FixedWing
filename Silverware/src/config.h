@@ -312,6 +312,45 @@
 
 
 
+//#############################################################################################################################
+//#############################################################################################################################
+// to be removed
+// things that are useless in a airplane
+//#############################################################################################################################
+//#############################################################################################################################
+
+// *************transmitter stick adjustable deadband for roll/pitch/yaw
+// *************.01f = 1% of stick range - comment out to disable
+//#define STICKS_DEADBAND .01f
+
+// *************DEFINE FLIGHT CONTROLLER HARDWARE HAS BEEN MODIFIED FOR BRUSHLESS CONVERSION   **WARNING**DO NOT ENABLE DSHOT DMA ESC DRIVER WITH BRUSHED MOTORS ATTACHED**
+//#define BRUSHLESS_CONVERSION
+
+// *************automatically remove center bias in toy tx ( needs throttle off for 1 second )
+//#define STOCK_TX_AUTOCENTER
+
+//Select Motor Filter Type  (I am no longer using this)
+//#define MOTOR_FILTER2_ALPHA MFILT1_HZ_90
+
+// *************clip feedforward attempts to resolve issues that occur near full throttle by adding any clipped motor commands to the next loop output
+//#define CLIP_FF
+ 
+// *************throttle angle compensation in level mode
+//#define AUTO_THROTTLE
+
+//**************joelucid's yaw fix
+//#define YAW_FIX
+
+// *************enable inverted flight code ( brushless only )
+//#define INVERTED_ENABLE
+//#define FN_INVERTED CH_OFF //for brushless only
+
+// *************SPECIAL TEST MODE TO CHECK TRANSMITTER STICK THROWS
+// *************This define will allow you to check if your radio is reaching 100% throws entering <RIGHT-RIGHT-DOWN> gesture
+// ************* will disable throttle and will rapid blink the led when sticks are moved to 100% throws
+// *************entering <LEFT-LEFT-DOWN> will return the quad to normal operation.
+//#define STICK_TRAVEL_CHECK
+
 
 //#############################################################################################################################
 //#############################################################################################################################
