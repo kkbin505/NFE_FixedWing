@@ -641,6 +641,16 @@
               <FileType>1</FileType>
               <FilePath>.\src\serial_4way_avrootloader.c</FilePath>
             </File>
+            <File>
+              <FileName>flight_modes.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\flight_modes.c</FilePath>
+            </File>
+            <File>
+              <FileName>flight_modes.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\flight_modes.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
