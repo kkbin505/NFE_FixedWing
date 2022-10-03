@@ -14,9 +14,10 @@ extern float angleerror[];
 extern float apid(int x);
 extern float setpoint[3];
 extern int acro_override;
+extern int levelmode_override;
 
 void apply_flight_modes(){
-if (aux[LEVELMODE]&&!acro_override){
+if (aux[LEVELMODE] || levelmode_override){
 	extern void stick_vector( float rx_input[] , float maxangle);
 	extern float errorvect[]; // level mode angle error calculated by stick_vector.c	
 	extern float GEstG[3]; // gravity vector for yaw feedforward
@@ -42,7 +43,7 @@ if (aux[LEVELMODE]&&!acro_override){
 	// *************************************************************************
 	
 	
-	if (aux[RACEMODE] && !aux[HORIZON]){ //racemode with angle behavior on roll ais
+	if ((aux[RACEMODE] && !aux[HORIZON]) && !levelmode_override)  { //racemode with angle behavior on roll ais
 			if (GEstG[2] < 0 ){ // acro on roll and pitch when inverted
 					error[0] = rates[0] - gyro[0];
 					error[1] = rates[1] - gyro[1];
@@ -55,7 +56,7 @@ if (aux[LEVELMODE]&&!acro_override){
 			// yaw
 			error[2] = yawerror[2] - gyro[2];
 		
-	}else if(aux[RACEMODE] && aux[HORIZON]){	//racemode with horizon behavior on roll axis	
+	}else if((aux[RACEMODE] && aux[HORIZON]) && !levelmode_override){	//racemode with horizon behavior on roll axis	
 			float inclinationRoll	= attitude[0];
 			float inclinationPitch = attitude[1];
 			float inclinationMax;
@@ -91,7 +92,7 @@ if (aux[LEVELMODE]&&!acro_override){
 			// yaw
 			error[2] = yawerror[2]  - gyro[2];  
 		
-	}else if(!aux[RACEMODE] && aux[HORIZON]){ //horizon overrites standard level behavior	
+	}else if((!aux[RACEMODE] && aux[HORIZON]) && !levelmode_override){ //horizon overrites standard level behavior	
 			//pitch and roll
 			for ( int i = 0 ; i <=1; i++){	
 			  	float inclinationRoll	= attitude[0];
@@ -128,7 +129,7 @@ if (aux[LEVELMODE]&&!acro_override){
 			// yaw
 			error[2] = yawerror[2]  - gyro[2];  
 			
-	}else{ //standard level mode
+	}else{ //standard level mode or levelmode override
 	    // pitch and roll
 			for ( int i = 0 ; i <=1; i++){
 					angleerror[i] = errorvect[i] ;    

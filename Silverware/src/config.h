@@ -73,13 +73,14 @@
 //*************be active.  With LEVELMODE active - MCU will apply RACEMODE if racemode channel is on, HORIZON if horizon 
 //*************channel is on, or racemodeHORIZON if both channels are on - and will be standard LEVELMODE if neither 
 //*************racemode or horizon are switched on.
-#define ARMING CHAN_5
-#define LEVELMODE CHAN_OFF
-#define RACEMODE  CHAN_OFF
-#define HORIZON   CHAN_OFF
+#define ARMING     CHAN_5
+#define MANUALMODE CHAN_OFF
+#define LEVELMODE  CHAN_OFF
+#define RACEMODE   CHAN_OFF
+#define HORIZON    CHAN_OFF
 #define PIDPROFILE CHAN_9               //For switching stickAccelerator & stickTransition profiles on pid.c page
-#define RATES CHAN_7
-#define LEDS_ON CHAN_OFF
+#define RATES      CHAN_7
+#define LEDS_ON    CHAN_OFF
 
 // *************switch for fpv / other, requires fet
 // *************comment out to disable
@@ -208,8 +209,10 @@
 // *************retune it back up to where it feels good.  I'm finding about 60 to 65% of my previous D value seems to work.
 //#define TORQUE_BOOST 1.0		//untested on servos
 
-// *************invert yaw pid for "PROPS OUT" configuration - This feature is switchable to "PROPS IN" when active with stick gesture DOWN-UP-DOWN, Save selection with DOWN-DOWN-DOWN
-//#define INVERT_YAW_PID			//untested on servos
+// *************invert servo and pid throws together
+//#define INVERT_AILERON_SERVO
+//#define INVERT_ELEVATOR_SERVO
+//#define INVERT_RUDDER_SERVO
 
 
 
@@ -220,9 +223,9 @@
 // minimum motor output: *for brushed a % value (0.0 - 100.0)   *for brushless this sets digital idle % for DSHOT for any selection
 //#define MOTOR_MIN_COMMAND  5.0
 	
-// *************makes throttle feel more poppy - can intensify small throttle imbalances visible in FPV if factor is set too high
-//#define THROTTLE_TRANSIENT_COMPENSATION 
-//#define THROTTLE_TRANSIENT_COMPENSATION_FACTOR 4.0 
+// *************makes throttle feel more poppy and responsive to quick changes
+//#define THROTTLE_BOOST 
+//#define THROTTLE_BOOST_FACTOR 4.0 
 
 
 

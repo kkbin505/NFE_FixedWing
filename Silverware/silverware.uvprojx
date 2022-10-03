@@ -651,6 +651,26 @@
               <FileType>5</FileType>
               <FilePath>.\src\flight_modes.h</FilePath>
             </File>
+            <File>
+              <FileName>throttle.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\throttle.c</FilePath>
+            </File>
+            <File>
+              <FileName>throttle.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\throttle.h</FilePath>
+            </File>
+            <File>
+              <FileName>mixer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\mixer.c</FilePath>
+            </File>
+            <File>
+              <FileName>mixer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\mixer.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
