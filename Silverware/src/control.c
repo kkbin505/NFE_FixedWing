@@ -124,6 +124,7 @@ apply_flight_modes();
 #ifdef YAW_FIX		//not sure how this will translate to planes
 	rotateErrors();
 #endif
+	//******************Going to need to call different pid systems here or have them switch inside these functions depending on flight mode
 	pid(0);
 	pid(1);
 	pid(2);
@@ -189,7 +190,7 @@ apply_flight_modes();
 
 
 
-// turn motors off if throttle is off and pitch / roll sticks are centered
+// FAILSAFE AND DISARMED BEHAVIOR
 	if ( failsafe || armed_state == 0 ) {
 		// motor off
 		throttle = 0;										//zero out throttle so it does not come back on as idle up value if enabled			
@@ -206,29 +207,6 @@ apply_flight_modes();
 			apply_manual_mixer();							// manualmode mixer
 			levelmode_override = 0;
 		}
-		
-		
-		
-		static float servo_pwm[4];
-		for ( int i = 0 ; i <= 3 ; i++)
-		{
-		#ifdef SERVO_OUTPUT
-			servo_pwm[i] = .001f * ( PWMFREQ + ( PWMFREQ * ((rxcopy[i]+1.0f)/2.0f) ) ); //Normalize rx array output to servo pulses, compensating for pwm frequency
-			if(i==3) servo_pwm[3] = .001f * PWMFREQ;
-		#ifdef PWM_MOSFET_INVERSION	
-			//the line below inverts the signal when using a brushed FC through the mosfets
-			servo_pwm[i] = 1.0f - servo_pwm[i];
-		#endif
-			pwm_set( i , servo_pwm[i] );
-		#else
-		//drone mode
-			pwm_set( i , 0 );	
-		#ifdef MOTOR_FILTER	
-			// reset the motor filter
-			motorfilter( 0 , i);
-		#endif
-		#endif	
-		}	
 		
 	
 		#ifdef STOCK_TX_AUTOCENTER
@@ -251,7 +229,7 @@ apply_flight_modes();
 		
 	}
 	else
-	{// motor is armed - normal flight	
+	{// ARMED / READY TO FLY / FLYING BEHAVIOR
 		
 		onground = 0;
 		levelmode_override = 0;
@@ -264,8 +242,7 @@ apply_flight_modes();
 				apply_manual_mixer();							// manualmode mixer
 			}else{
 				apply_sport_mixer();							// sport/acro mixer
-			}
-			
+			}		
 		}
 
 #ifdef TORQUE_BOOST
