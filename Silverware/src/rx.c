@@ -6,7 +6,8 @@ extern float rxcopy[4];
 extern char aux[AUXNUMBER];
 extern float rx[];
 extern float rates[3];
-
+extern float throttle;
+extern int ledcommand;
 
 
 
@@ -58,3 +59,35 @@ void apply_rates(){
   rates[1] = rxcopy[1] * (float) MAX_RATE * DEGTORAD;
   rates[2] = rxcopy[2] * (float) MAX_RATEYAW * DEGTORAD;
 }
+
+
+
+
+
+void apply_stick_travel_check(){
+	if (aux[CH_AUX1]){
+		throttle = 0;
+		if ((rx[0]<= -0.99f) || (rx[0] >= 0.99f) || (rx[1] <= -0.99f) || (rx[1] >= 0.99f) || (rx[2] <= -0.99f) || (rx[2] >= 0.99f) || (rx[3] <= 0.0f) || (rx[3] >= 0.99f)){
+		ledcommand = 1;}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

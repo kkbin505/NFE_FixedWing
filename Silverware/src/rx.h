@@ -6,6 +6,7 @@ void checkrx( void);
 void rx_spektrum_bind(void);
 #endif
 void apply_rates(void);
+void apply_stick_travel_check(void);
 
 
 
