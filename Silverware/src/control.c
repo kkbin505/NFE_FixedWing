@@ -454,13 +454,25 @@ if (aux[CH_AUX1]){
 			}
 		}	
 		
+		static float servo_pwm[4];
 		for ( int i = 0 ; i <= 3 ; i++)
 		{
+		#ifdef SERVO_OUTPUT
+			servo_pwm[i] = .001f * ( PWMFREQ + ( PWMFREQ * ((rxcopy[i]+1.0f)/2.0f) ) ); //Normalize rx array output to servo pulses, compensating for pwm frequency
+			if(i==3) servo_pwm[3] = .001f * PWMFREQ;
+		#ifdef PWM_MOSFET_INVERSION	
+			//the line below inverts the signal when using a brushed FC through the mosfets
+			servo_pwm[i] = 1.0f - servo_pwm[i];
+		#endif
+			pwm_set( i , servo_pwm[i] );
+		#else
+		//drone mode
 			pwm_set( i , 0 );	
-			#ifdef MOTOR_FILTER	
+		#ifdef MOTOR_FILTER	
 			// reset the motor filter
 			motorfilter( 0 , i);
-			#endif
+		#endif
+		#endif	
 		}	
 		
 		#ifdef MOTOR_BEEPS
@@ -624,10 +636,11 @@ extern float throttlehpf( float in );
 #ifdef SERVO_OUTPUT
 {
     // stabilized acro mixer
-		mix[MOTOR_FR] = throttle; 																			// FR
-		mix[MOTOR_FL] = (((-1 * rxcopy[0])+1.0f)/2.0f) - pidoutput[ROLL];   // FL	
-		mix[MOTOR_BR] = (((-1 * rxcopy[1])+1.0f)/2.0f) - pidoutput[PITCH];  // BR
-		mix[MOTOR_BL] = ((rxcopy[2]+1.0f)/2.0f) + pidoutput[YAW];						// BL	
+
+		mix[MOTOR_BL] = (((-1 * rxcopy[0])+1.0f)/2.0f) - pidoutput[ROLL];			// M0			Aileron
+		mix[MOTOR_FL] = (((-1 * rxcopy[1])+1.0f)/2.0f) - pidoutput[PITCH];   	// M1			Elevator
+		mix[MOTOR_BR] = ((rxcopy[2]+1.0f)/2.0f) + pidoutput[YAW];  						// M2			Rudder
+		mix[MOTOR_FR] = throttle; 																						// M3			Throttle
 }
 #else		
 #ifdef INVERTED_ENABLE

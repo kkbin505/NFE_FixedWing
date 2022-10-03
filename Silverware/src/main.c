@@ -179,12 +179,12 @@ clk_init();
 
 #else
 	#ifndef PWM_MOSFET_INVERSION
-	pwm_set( MOTOR_FR , .001f * PWMFREQ);
+	pwm_set( MOTOR_FR , 0);
 	pwm_set( MOTOR_FL , .001f * ( PWMFREQ + ( PWMFREQ * 0.5f )) );	
 	pwm_set( MOTOR_BR , .001f * ( PWMFREQ + ( PWMFREQ * 0.5f )) ); 
 	pwm_set( MOTOR_BL , .001f * ( PWMFREQ + ( PWMFREQ * 0.5f )) );
 	#else
-	pwm_set( MOTOR_FR , 1.0f-(.001f * PWMFREQ) );
+	pwm_set( MOTOR_FR , 1.0f);
 	pwm_set( MOTOR_FL , 1.0f-(.001f * ( PWMFREQ + ( PWMFREQ * 0.5f ))) );	
 	pwm_set( MOTOR_BR , 1.0f-(.001f * ( PWMFREQ + ( PWMFREQ * 0.5f ))) ); 
 	pwm_set( MOTOR_BL , 1.0f-(.001f * ( PWMFREQ + ( PWMFREQ * 0.5f ))) );	

@@ -5,10 +5,10 @@
 
 // defines for things that do not normally need changing
 
-#define MOTOR_BL 0
-#define MOTOR_FL 1
-#define MOTOR_FR 3
-#define MOTOR_BR 2
+#define MOTOR_BL 0	//Rudder   should be aileron
+#define MOTOR_FL 1	//Aileron	 should be elevator
+#define MOTOR_BR 2	//Elevator	should be rudder
+#define MOTOR_FR 3	//Throttle
 
 #define PIDNUMBER 3
 
