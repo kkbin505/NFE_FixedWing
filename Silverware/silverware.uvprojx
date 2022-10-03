@@ -482,6 +482,16 @@
               <FilePath>.\src\gesture_detect.c</FilePath>
             </File>
             <File>
+              <FileName>rx.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\rx.c</FilePath>
+            </File>
+            <File>
+              <FileName>rx.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\rx.h</FilePath>
+            </File>
+            <File>
               <FileName>rx_bayang_protocol.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\rx_bayang_protocol.c</FilePath>
