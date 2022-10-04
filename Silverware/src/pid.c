@@ -154,7 +154,7 @@ float pidkd_init[PIDNUMBER] = { 0, 0, 0 };
 		// "p term setpoint weighting" 0.0 - 1.0 where 1.0 = normal pid
 	#define ENABLE_SETPOINT_WEIGHTING
 	//            Roll   Pitch   Yaw
-	float b[3] = { 0.00 , 0.00 , 0.00};   //No pid response to changing setpoint
+	float b[3] = { 1.00 , 1.00 , 1.00};
 
 
 	/// output limit	
@@ -202,7 +202,7 @@ extern char aux[AUXNUMBER];
 extern float aux_analog[AUXNUMBER];
 extern char aux_analogchange[AUXNUMBER];
 extern float vbattfilt;
-
+extern int levelmode_override;
 
 
 // multiplier for pids at 3V - for PID_VOLTAGE_COMPENSATION - default 1.33f from H101 code
@@ -322,25 +322,23 @@ void apply_analog_aux_to_pids()
 
 float pid(int x )
 { 
-    if ((aux[LEVELMODE]) && (!aux[RACEMODE])){
-				if ((onground) || (in_air == 0)){
-						ierror[x] *= 0.98f;}
-		}else{
-			  if ((onground) || (in_air == 0)) ierror[x] *= 0.98f;
-		}
+	//wind down the integral error until craft is armed and throttle has passed limit to indicate launch
+	if ((onground) || (in_air == 0)) ierror[x] *= 0.98f;
 
 // pid tuning via analog aux channels
 #ifdef ANALOG_AUX_PIDS
-    apply_analog_aux_to_pids();
+	apply_analog_aux_to_pids();
 #endif
 
+	
+  static float avgSetpoint[3];
+  static int count[3];
+  extern float splpf( float in,int num );
+  extern float rxcopy[4];	
+	if (!aux[LEVELMODE] && !levelmode_override){		
+//++++++++++++++++++ sport/acro pid stabilization ++++++++++++++++++	
 		//make the default state to not accumulate I
     int iwindup = 1;
-#ifdef TRANSIENT_WINDUP_PROTECTION
-    static float avgSetpoint[3];
-    static int count[3];
-    extern float splpf( float in,int num );
-    extern float rxcopy[4];
 				
 // Calculate an autocentered adjustment to the sticks		*********** The performance of this algorithm is critical to I gain working properly in SPORT/ACRO mode... and I don't trust it fully*********
 		static float autocenter[3];
@@ -374,33 +372,16 @@ float pid(int x )
 
 		if ( x < 3 && fabsf( setpoint[x] - avgSetpoint[x] ) > 0.1f ) {
 			iwindup = 2;
-		}
-#endif		
-
-#ifdef ANTI_WINDUP_DISABLE
-		iwindup = 0;
-#endif
- 		
+		}	
+		
     if ( !iwindup)
     {		
-        #ifdef MIDPOINT_RULE_INTEGRAL
-         // trapezoidal rule instead of rectangular
-        ierror[x] = ierror[x] + (error[x] + lasterror[x]) * 0.5f *  pidki[x] * looptime;
-        lasterror[x] = error[x];
-        #endif
-            
-        #ifdef RECTANGULAR_RULE_INTEGRAL
-        ierror[x] = ierror[x] + error[x] *  pidki[x] * looptime;
-        lasterror[x] = error[x];					
-        #endif
-            
-        #ifdef SIMPSON_RULE_INTEGRAL
 				//Base Integral off Gyro and not error...aka assume setoint is always 0
         // assuming similar time intervals
         ierror[x] = ierror[x] + 0.166666f* (lasterror2[x] + 4*lasterror[x] - gyro[x]) *  pidki[x] * looptime;	
         lasterror2[x] = lasterror[x];
         lasterror[x] = -gyro[x];
-        #endif					
+				
     } else {
 				if ( iwindup == 2) ierror[x] *= 0.98f;	//reduce I - error towards 0 quickly while sticks are moving
 		}
@@ -408,15 +389,8 @@ float pid(int x )
     limitf( &ierror[x] , integrallimit[x] );
     
     
-    #ifdef ENABLE_SETPOINT_WEIGHTING
-    // P term
-    pidoutput[x] = error[x] * ( b[x])* pidkp[x];				
-    // b
-    pidoutput[x] +=  - ( 1.0f - b[x])* pidkp[x] * gyro[x];
-    #else
-    // P term with b disabled
-    pidoutput[x] = error[x] * pidkp[x];
-    #endif	
+    // P term with setpoint weight of 0
+    pidoutput[x] -= pidkp[x] * gyro[x];
 		
     // I term	
 		if (aux[CH_AUX1]){
@@ -424,7 +398,7 @@ float pid(int x )
 		}
 
     // D term
-    // skip yaw D term if not set               
+    // skip axis D term if not set               
     if ( pidkd[x] > 0 ){
 			
         #if (defined DTERM_LPF_1ST_HZ && !defined ADVANCED_PID_CONTROLLER)
@@ -505,16 +479,13 @@ float pid(int x )
 						lastrate[x] = gyro[x];	
             dterm = lpf2(  dterm, x );
             pidoutput[x] += dterm;		
-				#endif
-				
+				#endif			
     }
-		
-    		#ifdef PID_VOLTAGE_COMPENSATION
-					pidoutput[x] *= v_compensation;
-				#endif
-    limitf(  &pidoutput[x] , outlimit[x]);
-
-return pidoutput[x];		 		
+	}else{
+		//need to write and insert standard rate mode pid controller here for levelmode to work*******************************************************************************************************************
+	}	
+	limitf(  &pidoutput[x] , outlimit[x]);
+	return pidoutput[x];		 		
 }
 
 // calculate change from ideal loop time
