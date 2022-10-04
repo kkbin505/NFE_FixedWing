@@ -335,31 +335,33 @@ float pid(int x )
   static int count[3];
   extern float splpf( float in,int num );
   extern float rxcopy[4];	
+	extern float rxcentered[4];
+	
 	if (!aux[LEVELMODE] && !levelmode_override){		
 //++++++++++++++++++ sport/acro pid stabilization ++++++++++++++++++	
 		//make the default state to not accumulate I
     int iwindup = 1;
 				
 // Calculate an autocentered adjustment to the sticks		*********** The performance of this algorithm is critical to I gain working properly in SPORT/ACRO mode... and I don't trust it fully*********
-		static float autocenter[3];
-		static float lastrx[3];
-		static unsigned int consecutive[3];
-		static float rx_centered[3];
-		rx_centered[x] = (rxcopy[x] - autocenter[x]);
-		limitf(&rx_centered[x], 1.0);
-		if ( rxcopy[x] == lastrx[x] ){
-			consecutive[x]++;
-		}else{
-			consecutive[x] = 0;
-		}
-		lastrx[x] = rxcopy[x];
-		if ( consecutive[x] > 750 && fabsf( rxcopy[x]) < 0.1f ){
-			autocenter[x] = rxcopy[x];
-		}
+//		static float autocenter[3];
+//		static float lastrx[3];
+//		static unsigned int consecutive[3];
+//		static float rx_centered[3];
+//		rx_centered[x] = (rxcopy[x] - autocenter[x]);
+//		limitf(&rx_centered[x], 1.0);
+//		if ( rxcopy[x] == lastrx[x] ){
+//			consecutive[x]++;
+//		}else{
+//			consecutive[x] = 0;
+//		}
+//		lastrx[x] = rxcopy[x];
+//		if ( consecutive[x] > 750 && fabsf( rxcopy[x]) < 0.1f ){
+//			autocenter[x] = rxcopy[x];
+//		}
 		
 //Check for defelction against the autocentered stick value (if raw sticks are in the 10% range		
 		if (x < 3 && fabsf(rxcopy[x]) < 0.10f){																	//if sticks are in trimable range near center - we might allow I term to fight rotation	
-			if (fabsf( rx_centered[x] ) < 0.01f) {																//allow i term to build if sticks are very close to not moving at all
+			if (fabsf( rxcentered[x] ) < 0.01f) {																	//allow i term to build if sticks are very close to not moving at all
 				iwindup = 0;					 																																
 			}else{																																//otherwise sticks are deflected so freeze I term - maybe in the future check to see if the deflection is pushing against or with I term
 				iwindup = 1;
