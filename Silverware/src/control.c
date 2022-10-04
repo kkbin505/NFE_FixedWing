@@ -43,30 +43,17 @@ THE SOFTWARE.
 #include "mixer.h"
 
 
-
-
 extern int armed_state;
 extern int in_air;
 extern int arming_release;
 extern int binding_while_armed;
 extern int rx_ready;
 extern float rx[];
-//extern float gyro[3];
 extern int failsafe;
-//extern float pidoutput[PIDNUMBER];
-//extern float setpoint[3];
 extern float angleerror[];
 extern float attitude[];
-
-
-
-
-
-
 extern char aux[AUXNUMBER];
-
 extern int ledcommand;
-
 extern float apid(int x);
 
 int onground = 1;
