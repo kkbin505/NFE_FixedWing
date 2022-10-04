@@ -264,7 +264,7 @@ if ( framestarted == 1){
 				if ( rx[3] < 0 ) rx[3] = 0;
 	#endif
 				
-				if (aux[LEVELMODE]){
+/*				if (aux[LEVELMODE]){
 							if (aux[RACEMODE] && !aux[HORIZON]){
 									if ( ANGLE_EXPO_ROLL > 0.01) rx[0] = rcexpo(rx[0], ANGLE_EXPO_ROLL);
 									if ( ACRO_EXPO_PITCH > 0.01) rx[1] = rcexpo(rx[1], ACRO_EXPO_PITCH);
@@ -282,7 +282,7 @@ if ( framestarted == 1){
 						if ( ACRO_EXPO_PITCH > 0.01) rx[1] = rcexpo(rx[1], ACRO_EXPO_PITCH);
 						if ( ACRO_EXPO_YAW > 0.01) rx[2] = rcexpo(rx[2], ACRO_EXPO_YAW);
 				}
-							
+*/							
 	#ifdef RX_DSMX_2048		
 				aux[CHAN_5] = (channels[4] > 1100) ? 1 : 0;													//1100 cutoff intentionally selected to force aux channels low if 
 				aux[CHAN_6] = (channels[5] > 1100) ? 1 : 0;													//being controlled by a transmitter using a 3 pos switch in center state

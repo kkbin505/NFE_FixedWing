@@ -285,7 +285,7 @@ void checkrx()
 					
 					
 	
-          if (aux[LEVELMODE]) {
+ /*         if (aux[LEVELMODE]) {
             if (aux[RACEMODE] && !aux[HORIZON]) {
               if ( ANGLE_EXPO_ROLL > 0.01) rx[0] = rcexpo(rx[0], ANGLE_EXPO_ROLL);
               if ( ACRO_EXPO_PITCH > 0.01) rx[1] = rcexpo(rx[1], ACRO_EXPO_PITCH);
@@ -304,6 +304,7 @@ void checkrx()
             if ( ACRO_EXPO_PITCH > 0.01) rx[1] = rcexpo(rx[1], ACRO_EXPO_PITCH);
             if ( ACRO_EXPO_YAW > 0.01) rx[2] = rcexpo(rx[2], ACRO_EXPO_YAW);
           }
+*/					
 //Here we have the AUX channels Silverware supports
           aux[CHAN_5] = (channels[4] > 1600) ? 1 : 0;
           aux[CHAN_6] = (channels[5] > 1600) ? 1 : 0;

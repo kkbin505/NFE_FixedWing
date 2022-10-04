@@ -469,7 +469,7 @@ static int decodepacket(void)
                 }
 #endif
 
-							if (aux[LEVELMODE]){
+/*							if (aux[LEVELMODE]){
 								if (aux[RACEMODE] && !aux[HORIZON]){
 									if ( ANGLE_EXPO_ROLL > 0.01) rx[0] = rcexpo(rx[0], ANGLE_EXPO_ROLL);
 									if ( ACRO_EXPO_PITCH > 0.01) rx[1] = rcexpo(rx[1], ACRO_EXPO_PITCH);
@@ -487,7 +487,7 @@ static int decodepacket(void)
 								if ( ACRO_EXPO_PITCH > 0.01) rx[1] = rcexpo(rx[1], ACRO_EXPO_PITCH);
 								if ( ACRO_EXPO_YAW > 0.01) rx[2] = rcexpo(rx[2], ACRO_EXPO_YAW);
 							}
-
+*/
                 for (int i = 0; i < AUXNUMBER - 2; i++)
                   {
                       auxchange[i] = 0;

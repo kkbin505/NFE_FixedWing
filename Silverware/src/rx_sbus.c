@@ -317,7 +317,7 @@ if ( frame_received )
 				if ( rx[3] > 1 ) rx[3] = 1;	
 				if ( rx[3] < 0 ) rx[3] = 0;
 				
-							if (aux[LEVELMODE]){
+/*							if (aux[LEVELMODE]){
 								if (aux[RACEMODE] && !aux[HORIZON]){
 									if ( ANGLE_EXPO_ROLL > 0.01) rx[0] = rcexpo(rx[0], ANGLE_EXPO_ROLL);
 									if ( ACRO_EXPO_PITCH > 0.01) rx[1] = rcexpo(rx[1], ACRO_EXPO_PITCH);
@@ -335,7 +335,7 @@ if ( frame_received )
 								if ( ACRO_EXPO_PITCH > 0.01) rx[1] = rcexpo(rx[1], ACRO_EXPO_PITCH);
 								if ( ACRO_EXPO_YAW > 0.01) rx[2] = rcexpo(rx[2], ACRO_EXPO_YAW);
 							}
-							
+*/							
 		    aux[CHAN_5] = (channels[4] > 993) ? 1 : 0;
 		    aux[CHAN_6] = (channels[5] > 993) ? 1 : 0;
 		    aux[CHAN_7] = (channels[6] > 993) ? 1 : 0;
