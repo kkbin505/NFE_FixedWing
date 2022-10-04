@@ -128,29 +128,6 @@ float pidkd_init[PIDNUMBER] = { 0, 0, 0 };
 
 
 //************************************Setpoint Weight & Limits********************************
-#ifdef BRUSHLESS_TARGET
-
-	/// output limit	
-	const float outlimit[PIDNUMBER] = { 0.8 , 0.8 , 0.4 };
-
-	// limit of integral term (abs)
-	const float integrallimit[PIDNUMBER] = { 0.8 , 0.8 , 0.4 };
-
-#else  //BRUSHED TARGET
-
-	#ifndef SERVO_OUTPUT
-	// "p term setpoint weighting" 0.0 - 1.0 where 1.0 = normal pid
-	#define ENABLE_SETPOINT_WEIGHTING
-	//            Roll   Pitch   Yaw
-	//float b[3] = { 0.97 , 0.98 , 0.95};   //BRUSHED RACE
-	float b[3] = { 0.93 , 0.93 , 0.9};      //BRUSHED FREESTYLE
-
-	/// output limit	
-	const float outlimit[PIDNUMBER] = { 1.7 , 1.7 , 0.5 };
-
-	// limit of integral term (abs)
-	const float integrallimit[PIDNUMBER] = { 1.7 , 1.7 , 0.5 };
-	#else
 		// "p term setpoint weighting" 0.0 - 1.0 where 1.0 = normal pid
 	#define ENABLE_SETPOINT_WEIGHTING
 	//            Roll   Pitch   Yaw
@@ -162,17 +139,7 @@ float pidkd_init[PIDNUMBER] = { 0, 0, 0 };
 
 	// limit of integral term (abs)
 	const float integrallimit[PIDNUMBER] = { 0.1 , 0.05 , 0.1 };		//Airplanes are already stable so treat I like trim and limit to 10% or maybe even less.  This might allow for higher gains
-	#endif
-	
-#endif
-	
-	
-	
-//#define RECTANGULAR_RULE_INTEGRAL
-//#define MIDPOINT_RULE_INTEGRAL
-#define SIMPSON_RULE_INTEGRAL
 
-//#define ANTI_WINDUP_DISABLE
 
 // non changable things below
 float * pids_array[3] = {pidkp, pidki, pidkd};
@@ -185,6 +152,7 @@ float ierror[PIDNUMBER] = { 0 , 0 , 0};
 float pidoutput[PIDNUMBER];
 float setpoint[PIDNUMBER];
 static float lasterror[PIDNUMBER];
+static float lasterror2[PIDNUMBER];
 float v_compensation = 1.00;
 
 #ifdef ANALOG_AUX_PIDS
@@ -192,7 +160,6 @@ int analog_aux_pids_adjusted = 0;
 #endif
 
 float error[PIDNUMBER];
-extern float setpoint[PIDNUMBER];
 extern float looptime;
 extern float gyro[3];
 extern int onground;
@@ -335,7 +302,7 @@ float pid(int x )
   static int count[3];
   extern float splpf( float in,int num );
   extern float rxcopy[4];	
-	extern float rxcentered[4];
+	extern float rxcentered[3];
 	
 	if (!aux[LEVELMODE] && !levelmode_override){		
 //++++++++++++++++++ sport/acro pid stabilization ++++++++++++++++++	
@@ -437,7 +404,102 @@ float pid(int x )
             pidoutput[x] += dterm;
 				#endif   
 
-				#if (defined DTERM_LPF_2ND_HZ && defined ADVANCED_PID_CONTROLLER)
+				#if (defined DTERM_LPF_2ND_HZ && defined ADVANCED_PID_CONTROLLER)	
+        float dterm;		
+				float transitionSetpointWeight[3];
+				float stickAccelerator[3];
+				float stickTransition[3];
+			if (aux[PIDPROFILE]){
+				stickAccelerator[x] = stickAcceleratorProfileB[x];
+				stickTransition[x] = stickTransitionProfileB[x];
+			}else{
+				stickAccelerator[x] = stickAcceleratorProfileA[x];
+				stickTransition[x] = stickTransitionProfileA[x];
+			}				
+				if (stickAccelerator[x] < 1){
+				transitionSetpointWeight[x] = (fabs(rxcentered[x]) * stickTransition[x]) + (1- stickTransition[x]);
+				}else{
+				transitionSetpointWeight[x] = (fabs(rxcentered[x]) * (stickTransition[x] / stickAccelerator[x])) + (1- stickTransition[x]);	
+				}
+        static float lastrate[3];
+				static float lastsetpoint[3];
+        float lpf2( float in, int num);
+  
+						dterm = ((setpoint[x] - lastsetpoint[x]) * pidkd[x] * stickAccelerator[x] * transitionSetpointWeight[x] * timefactor) - ((gyro[x] - lastrate[x]) * pidkd[x] * timefactor);
+						lastsetpoint[x] = setpoint [x];
+						lastrate[x] = gyro[x];	
+            dterm = lpf2(  dterm, x );
+            pidoutput[x] += dterm;		
+				#endif			
+    }
+	}else{
+		
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++		
+		#ifdef TRANSIENT_WINDUP_PROTECTION
+    static float avgSetpoint[3];
+    static int count[3];
+    extern float splpf( float in,int num );
+    
+    if ( x < 2 && (count[x]++ % 2) == 0 ) {
+        avgSetpoint[x] = splpf( setpoint[x], x );
+    }
+#endif
+// NEED TO SORT OUT ABOVE HERE		
+    int iwindup = 0;
+    if (( pidoutput[x] == outlimit[x] )&& ( error[x] > 0) )
+    {
+        iwindup = 1;		
+    }
+    
+    if (( pidoutput[x] == -outlimit[x])&& ( error[x] < 0) )
+    {
+        iwindup = 1;				
+    } 
+ 
+		if ( x < 2 && fabsf( setpoint[x] - avgSetpoint[x] ) > 0.1f ) {
+			iwindup = 1;
+		}
+		
+    if ( !iwindup)
+    {
+        // assuming similar time intervals
+        ierror[x] = ierror[x] + 0.166666f* (lasterror2[x] + 4*lasterror[x] + error[x]) *  pidki[x] * looptime;	
+        lasterror2[x] = lasterror[x];
+        lasterror[x] = error[x];			
+    }
+            
+    limitf( &ierror[x] , integrallimit[x] );
+    
+    
+    #ifdef ENABLE_SETPOINT_WEIGHTING
+    // P term
+    pidoutput[x] = error[x] * ( b[x])* pidkp[x];				
+    // b
+    pidoutput[x] +=  - ( 1.0f - b[x])* pidkp[x] * gyro[x];
+    #else
+    // P term with b disabled
+    pidoutput[x] = error[x] * pidkp[x];
+    #endif	
+		
+    // I term	
+    pidoutput[x] += ierror[x];
+
+    // D term
+    // skip yaw D term if not set               
+    if ( pidkd[x] > 0 ){
+			
+        #if (defined DTERM_LPF_1ST_HZ && !defined ADVANCED_PID_CONTROLLER)
+        float dterm;
+        static float lastrate[3];
+        static float dlpf[3] = {0};
+
+						dterm = - (gyro[x] - lastrate[x]) * pidkd[x] * timefactor;
+						lastrate[x] = gyro[x];
+						lpf( &dlpf[x], dterm, FILTERCALC( 0.001 , 1.0f/DTERM_LPF_1ST_HZ ) );
+						pidoutput[x] += dlpf[x];                   
+        #endif
+        
+        #if (defined DTERM_LPF_1ST_HZ && defined ADVANCED_PID_CONTROLLER)
 				extern float rxcopy[4];		
         float dterm;		
 				float transitionSetpointWeight[3];
@@ -457,6 +519,45 @@ float pid(int x )
 				}
         static float lastrate[3];
 				static float lastsetpoint[3];
+        static float dlpf[3] = {0};
+        
+						dterm = ((setpoint[x] - lastsetpoint[x]) * pidkd[x] * stickAccelerator[x] * transitionSetpointWeight[x] * timefactor) - ((gyro[x] - lastrate[x]) * pidkd[x] * timefactor);
+						lastsetpoint[x] = setpoint [x];
+						lastrate[x] = gyro[x];	
+						lpf( &dlpf[x], dterm, FILTERCALC( 0.001 , 1.0f/DTERM_LPF_1ST_HZ ) );
+						pidoutput[x] += dlpf[x];                    
+        #endif	
+     		
+        #if (defined DTERM_LPF_2ND_HZ && !defined ADVANCED_PID_CONTROLLER)
+        float dterm;
+        static float lastrate[3]; 
+        float lpf2( float in, int num);
+        
+						dterm = - (gyro[x] - lastrate[x]) * pidkd[x] * timefactor;
+						lastrate[x] = gyro[x];	
+            dterm = lpf2(  dterm, x );
+            pidoutput[x] += dterm;
+				#endif   
+
+				#if (defined DTERM_LPF_2ND_HZ && defined ADVANCED_PID_CONTROLLER)	
+        float dterm;		
+				float transitionSetpointWeight[3];
+				float stickAccelerator[3];
+				float stickTransition[3];
+			if (aux[PIDPROFILE]){
+				stickAccelerator[x] = stickAcceleratorProfileB[x];
+				stickTransition[x] = stickTransitionProfileB[x];
+			}else{
+				stickAccelerator[x] = stickAcceleratorProfileA[x];
+				stickTransition[x] = stickTransitionProfileA[x];
+			}				
+				if (stickAccelerator[x] < 1){
+				transitionSetpointWeight[x] = (fabs(rxcentered[x]) * stickTransition[x]) + (1- stickTransition[x]);
+				}else{
+				transitionSetpointWeight[x] = (fabs(rxcentered[x]) * (stickTransition[x] / stickAccelerator[x])) + (1- stickTransition[x]);	
+				}
+        static float lastrate[3];
+				static float lastsetpoint[3];
         float lpf2( float in, int num);
   
 						dterm = ((setpoint[x] - lastsetpoint[x]) * pidkd[x] * stickAccelerator[x] * transitionSetpointWeight[x] * timefactor) - ((gyro[x] - lastrate[x]) * pidkd[x] * timefactor);
@@ -464,10 +565,16 @@ float pid(int x )
 						lastrate[x] = gyro[x];	
             dterm = lpf2(  dterm, x );
             pidoutput[x] += dterm;		
-				#endif			
+				#endif
+				
     }
-	}else{
-		//need to write and insert standard rate mode pid controller here for levelmode to work*******************************************************************************************************************
+		
+		
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++		
+		
+		
+		
+		//need to write and insert standard rate mode pid controller here for any levelmode to work*******************************************************************************************************************
 	}	
 	limitf(  &pidoutput[x] , outlimit[x]);
 	return pidoutput[x];		 		
