@@ -12,6 +12,7 @@ extern int levelmode_override;
 
 float rxcopy[4];
 float rxcentered[3];
+float autocenter[3];
 float rates[3];
 
 //probably need to make the returns of this function conditional on flight mode to support mixed combos from horizon and racemode and to eliminate the need for an acro function
@@ -39,7 +40,7 @@ void apply_rates(){
 	//get raw rx[] from radio
 		rxcopy[i] = rx[i];
 	//autocentering algorithm detects trimmed centerpoint	
-		static float autocenter[3];
+		//static float autocenter[3];
 		static float lastrx[3];
 		static unsigned int consecutive[3];
 		rxcentered[i] = (rxcopy[i] - autocenter[i]);
