@@ -14,10 +14,16 @@ float rxcopy[4];
 float rxcentered[3];
 float rates[3];
 
+//probably need to make the returns of this function conditional on flight mode to support mixed combos from horizon and racemode and to eliminate the need for an acro function
+float get_angle_expo (int axis){
+	if (axis==0) return ANGLE_EXPO_ROLL;
+	if (axis==2) return ANGLE_EXPO_PITCH;
+	if (axis==3) return ANGLE_EXPO_YAW;
+	return 0;
+}
 
 
-
-void apply_rates(){																		//apply rates high/low rates first then expo.  when low rates are selected - 
+void apply_rates(){
 	//establish rate multiplier from high-low rates switch 
 	float rate_multiplier = 1.0;
 	#if (defined USE_ANALOG_AUX && defined ANALOG_RATE_MULT)
@@ -46,24 +52,25 @@ void apply_rates(){																		//apply rates high/low rates first then exp
 		if ( consecutive[i] > 750 && fabsf( rxcopy[i]) < 0.1f ){
 			autocenter[i] = rxcopy[i];
 		}
+	//if in a leveled mode - any leveled axis will be using rxcentered[] as stick input so we can aply ANGLE_EXPO_AXIS to rxcentered[] unconditionally
 	//apply low rates to rxcentered (used in levelmode) - sticks are already corrected to a 0 centerpoint so we can use the low rates multiplier with multiplication
-		if (!aux[RATES]){
-			rxcentered[i] = rxcentered[i] * rate_multiplier;
-		}
+		rxcentered[i] = rxcentered[i] * rate_multiplier;
 	//finally we apply expo normally but also cut expo by a factor of low rates multiplier when low rates are active
-		
-		
+		if (get_angle_expo(i) > 0.01f) rxcentered[i] = rcexpo(rx[i], (rate_multiplier * get_angle_expo(i)) ); 	
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++		
+	//if in sport or manual mode
+	//first we nned to scale and remap sticks since pilot trims will shift the detected stick range beyond 1 or -1
+	//the result should accept incoming sticks that are out of range due to trims and will stretch / squeeze throws to fit back into range at the expense of resolution
+	//but we also need to apply the low rates if selected.  But using low rates multiplier as a factor against rxcopy[] will cause a loss of trim on the control surfaces when selecting low rates.
+	//So low rates can also be performed as part of the map function substituting 1.0 in the previous stick scale for low rates multiplier - this will retain the trimmed pilot centerpoint.
+	
+		//scale raw sticks ....  range: from [(detected trimmed centerpoint) to (1.0 +/- detected trim amount)] to [(-1 to detected trimmed center) and (detected trim center to +1)]
+		//if (rxcopy[i] > autocenter[i])  mapf the things that need mapping and scaling
 
-			//if in sport or manual mode
-			//first we scale since pilot trims will shift the detected stick range beyond 1 or -1
-			//this will accept a stick scale that is out of range due to trims and will stretch / squeeze throws to fit back into range at the expense of resolution
-			//scale raw sticks ....  range: from [(detected trimmed centerpoint) to (1.0 +/- detected trim amount)] to [(-1 to detected trimmed center) and (detected trim center to +1)]
+			
 	
-			//next we apply low rates - Using low rates multiplier as a factor against rx[] will cause a loss of trim on the control surfaces.  A different approach must be taken.
-			//low rates are also performed as a map function substituting 1.0 in the previous stick scale for low rates multiplier - this will retain the trimmed pilot centerpoint
-	
-			//finally apply expo from detected trim center to endpoints
-		
+	//finally apply expo from detected trim center to endpoints
+		//this one will take some new math
 	//limit both rxcopy[] and rxcentered[]
 		limitf(&rxcopy[i], 1.0);
 		limitf(&rxcentered[i], 1.0);
