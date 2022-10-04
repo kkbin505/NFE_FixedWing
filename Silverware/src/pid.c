@@ -341,23 +341,6 @@ float pid(int x )
 //++++++++++++++++++ sport/acro pid stabilization ++++++++++++++++++	
 		//make the default state to not accumulate I
     int iwindup = 1;
-				
-// Calculate an autocentered adjustment to the sticks		*********** The performance of this algorithm is critical to I gain working properly in SPORT/ACRO mode... and I don't trust it fully*********
-//		static float autocenter[3];
-//		static float lastrx[3];
-//		static unsigned int consecutive[3];
-//		static float rx_centered[3];
-//		rx_centered[x] = (rxcopy[x] - autocenter[x]);
-//		limitf(&rx_centered[x], 1.0);
-//		if ( rxcopy[x] == lastrx[x] ){
-//			consecutive[x]++;
-//		}else{
-//			consecutive[x] = 0;
-//		}
-//		lastrx[x] = rxcopy[x];
-//		if ( consecutive[x] > 750 && fabsf( rxcopy[x]) < 0.1f ){
-//			autocenter[x] = rxcopy[x];
-//		}
 		
 //Check for defelction against the autocentered stick value (if raw sticks are in the 10% range		
 		if (x < 3 && fabsf(rxcopy[x]) < 0.10f){																	//if sticks are in trimable range near center - we might allow I term to fight rotation	
