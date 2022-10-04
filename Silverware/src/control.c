@@ -169,12 +169,18 @@ apply_flight_modes();
 		apply_throttle();
 		
 		if (aux[LEVELMODE]){
-			apply_rate_mixer(); 								// levelmode mixer
+			if (aux[RACEMODE] && !aux[HORIZON]){
+				apply_racemode_mixer(); 								// racemode mixer
+			}else if (aux[HORIZON]){
+				apply_horizon_mixer(); 								// horizon mixer
+			}else{
+				apply_rate_mixer(); 								// levelmode mixer
+			}
 		}else{
 			if (aux[MANUALMODE]){
 				apply_manual_mixer();							// manualmode mixer
 			}else{
-				apply_sport_mixer();							// sport/acro mixer
+				apply_sport_mixer();						// sport/acro mixer is the default with all flight mode aux set to off
 			}		
 		}
 
