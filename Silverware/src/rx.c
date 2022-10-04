@@ -64,7 +64,7 @@ void apply_rates(){																		//apply rates high/low rates first then exp
 	
 			//finally apply expo from detected trim center to endpoints
 		
-	//limit rxcopy[]
+	//limit both rxcopy[] and rxcentered[]
 		limitf(&rxcopy[i], 1.0);
 		limitf(&rxcentered[i], 1.0);
 	//end for loop
