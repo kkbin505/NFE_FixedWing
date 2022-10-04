@@ -44,72 +44,38 @@ THE SOFTWARE.
 
 
 
-float	throttle;
-int idle_state;
+
 extern int armed_state;
 extern int in_air;
 extern int arming_release;
 extern int binding_while_armed;
 extern int rx_ready;
-
 extern float rx[];
-extern float gyro[3];
+//extern float gyro[3];
 extern int failsafe;
-extern float pidoutput[PIDNUMBER];
-extern float setpoint[3];
-
+//extern float pidoutput[PIDNUMBER];
+//extern float setpoint[3];
 extern float angleerror[];
 extern float attitude[];
 
-int onground = 1;
-int levelmode_override = 0;
-float thrsum;
 
-float error[PIDNUMBER];
-float motormap( float input);
 
-float yawangle;
 
-extern float looptime;
 
-extern char auxchange[AUXNUMBER];
+
 extern char aux[AUXNUMBER];
-extern float aux_analog[AUXNUMBER];
-extern char aux_analogchange[AUXNUMBER];
 
 extern int ledcommand;
-extern int ledblink;
 
 extern float apid(int x);
 
-#ifdef NOMOTORS
-// to maintain timing or it will be optimized away
-float tempx[4];
-#endif
-
-#ifdef STOCK_TX_AUTOCENTER
-float autocenter[3];
-float lastrx[3];
-unsigned int consecutive[3];
-#endif
-
-unsigned long timecommand = 0;
-
-extern int controls_override;
-extern float rx_override[];
-extern int acro_override;
-
-float overthrottlefilt = 0;
-float underthrottlefilt = 0;
-
-float rxcopy[4];
-float rates[3];
+int onground = 1;
+int levelmode_override = 0;
+float	throttle;
+int idle_state;
 float mix[4];
-
-
-
-
-
+float thrsum;
+float motormap( float input);
 
 
 void control( void)
@@ -206,30 +172,10 @@ apply_flight_modes();
 			//craft is safely on the ground and should display manual mode behavior with no throttle
 			apply_manual_mixer();							// manualmode mixer
 			levelmode_override = 0;
-		}
-		
-	
-		#ifdef STOCK_TX_AUTOCENTER
-		for( int i = 0 ; i <3;i++)
-			{
-				if ( rx[i] == lastrx[i] )
-					{
-						consecutive[i]++;
-						
-					}
-				else consecutive[i] = 0;
-				lastrx[i] = rx[i];
-				if ( consecutive[i] > 1000 && fabsf( rx[i]) < 0.1f )
-					{
-						autocenter[i] = rx[i];
-					}
-			}
-		#endif	
-
-		
+		}	
 	}
-	else
-	{// ARMED / READY TO FLY / FLYING BEHAVIOR
+	else// ARMED / READY TO FLY / FLYING BEHAVIOR
+	{
 		
 		onground = 0;
 		levelmode_override = 0;

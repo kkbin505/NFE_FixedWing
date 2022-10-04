@@ -191,7 +191,7 @@ float v_compensation = 1.00;
 int analog_aux_pids_adjusted = 0;
 #endif
 
-extern float error[PIDNUMBER];
+float error[PIDNUMBER];
 extern float setpoint[PIDNUMBER];
 extern float looptime;
 extern float gyro[3];

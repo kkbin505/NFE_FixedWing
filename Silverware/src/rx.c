@@ -5,9 +5,12 @@
 extern float rxcopy[4];
 extern char aux[AUXNUMBER];
 extern float rx[];
-extern float rates[3];
 extern float throttle;
 extern int ledcommand;
+
+float rxcopy[4];
+float rxcentered[4];
+float rates[3];
 
 
 
@@ -60,7 +63,11 @@ void apply_rates(){																		//apply rates high/low rates first then exp
 		
 		
 		
-		
+#ifdef STOCK_TX_AUTOCENTER
+float autocenter[3];
+float lastrx[3];
+unsigned int consecutive[3];
+#endif		
 		
 		
 #ifdef STOCK_TX_AUTOCENTER
@@ -79,8 +86,6 @@ void apply_rates(){																		//apply rates high/low rates first then exp
 					}
 			}
 #endif	
-		
-		
 		
 		
 		
