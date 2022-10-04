@@ -304,8 +304,14 @@ float pid(int x )
   extern float rxcopy[4];	
 	extern float rxcentered[3];
 	
-	if (!aux[LEVELMODE] && !levelmode_override){		
-//++++++++++++++++++ sport/acro pid stabilization ++++++++++++++++++	
+	//Calculate average setpoint
+	if ( x < 3 && (count[x]++ % 2) == 0 ) {
+		avgSetpoint[x] = splpf( setpoint[x], x );
+	}
+	
+	//need to describe manual/sport/ and axis 1 on racemode also must not be in failsafe/levelmode_override
+	if ((!aux[LEVELMODE] && !levelmode_override)|| (aux[LEVELMODE] && aux[RACEMODE] && !levelmode_override && (x == PITCH))){		
+//++++++++++++++++++ sport/acro pid stabilization ++++++++++++++++++
 		//make the default state to not accumulate I
     int iwindup = 1;
 		
@@ -317,10 +323,6 @@ float pid(int x )
 				iwindup = 1;
 			}
 		}
-		//Calculate average setpoint
-    if ( x < 3 && (count[x]++ % 2) == 0 ) {
-        avgSetpoint[x] = splpf( setpoint[x], x );
-    }
 
 		if ( x < 3 && fabsf( setpoint[x] - avgSetpoint[x] ) > 0.1f ) {
 			iwindup = 2;
@@ -432,19 +434,9 @@ float pid(int x )
             pidoutput[x] += dterm;		
 				#endif			
     }
-	}else{
-		
+	}else{		
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++		
-		#ifdef TRANSIENT_WINDUP_PROTECTION
-    static float avgSetpoint[3];
-    static int count[3];
-    extern float splpf( float in,int num );
-    
-    if ( x < 2 && (count[x]++ % 2) == 0 ) {
-        avgSetpoint[x] = splpf( setpoint[x], x );
-    }
-#endif
-// NEED TO SORT OUT ABOVE HERE		
+		//below is the traditional flight controller
     int iwindup = 0;
     if (( pidoutput[x] == outlimit[x] )&& ( error[x] > 0) )
     {
@@ -568,14 +560,9 @@ float pid(int x )
 				#endif
 				
     }
-		
-		
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++		
-		
-		
-		
-		//need to write and insert standard rate mode pid controller here for any levelmode to work*******************************************************************************************************************
+				
 	}	
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	limitf(  &pidoutput[x] , outlimit[x]);
 	return pidoutput[x];		 		
 }

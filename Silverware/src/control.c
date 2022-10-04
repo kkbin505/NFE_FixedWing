@@ -154,7 +154,7 @@ apply_flight_modes();
 		if ( failsafe && in_air ) {
 			//craft has failsafed in the air and should come down in levelmode with motor off
 			levelmode_override = 1;
-			apply_manual_mixer();
+			apply_rate_mixer();
 		}else{
 			//craft is safely on the ground and should display manual mode behavior with no throttle
 			apply_manual_mixer();							// manualmode mixer
@@ -169,12 +169,10 @@ apply_flight_modes();
 		apply_throttle();
 		
 		if (aux[LEVELMODE]){
-			if (aux[RACEMODE] && !aux[HORIZON]){
-				apply_racemode_mixer(); 								// racemode mixer
-			}else if (aux[HORIZON]){
-				apply_horizon_mixer(); 								// horizon mixer
+			if (aux[RACEMODE]){
+				apply_racemode_mixer(); 								// racemode and racemode horizon mixer
 			}else{
-				apply_rate_mixer(); 								// levelmode mixer
+				apply_rate_mixer(); 								// levelmode mixer and horizon mixer
 			}
 		}else{
 			if (aux[MANUALMODE]){
