@@ -18,7 +18,7 @@
 
 // *************It is possible to get a servo signal out of the M- motor pad on a brushed flight controller by inverting
 // *************the signal and adding a 10k pullup resistor from M- to 5v+.  Uncomment below if this hardware hack has been performed.
-#define PWM_MOSFET_INVERSION
+//#define PWM_MOSFET_INVERSION
 
 
 //**********************************************************************************************************************
@@ -48,9 +48,9 @@
 
 // *************Radio protocol selection
 // *************select only one
-//#define RX_SBUS
+#define RX_SBUS
 //#define RX_CRSF                                           //Requires tbs firmware v2.88 or newer for failsafe to operate properly
-#define RX_DSMX_2048
+//#define RX_DSMX_2048
 //#define RX_DSM2_1024
 //#define RX_IBUS
 //#define RX_NRF24_BAYANG_TELEMETRY
@@ -267,12 +267,6 @@
 // things that should not be usually changed
 //#############################################################################################################################
 //#############################################################################################################################
-
-//Everything for servos depends on this define - do not turn it off
-#define SERVO_OUTPUT
-
-//**************NFE's transient windup protection.  Allows use of integral gains in Sport/Acro mode 
-#define TRANSIENT_WINDUP_PROTECTION
 
 //enables use of stick accelerator and stick transition for d term lpf 1 & 2
 #define ADVANCED_PID_CONTROLLER
