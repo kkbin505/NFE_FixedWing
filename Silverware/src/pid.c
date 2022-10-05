@@ -67,6 +67,13 @@ float pidkp[PIDNUMBER] = { 1.94e-2 , 2.5e-2  , 2.5e-2 };
 float pidki[PIDNUMBER] = { 1.1e-1  , 0.5e-1 , 1.1e-1 };	
 float pidkd[PIDNUMBER] = { 2.04e-1 , 3.0e-1  , 3.0e-1 };
 
+
+//Servo Pids for Fixed Wing
+//                         ROLL       PITCH     YAW
+//float pidkp[PIDNUMBER] = { 1.94e-2 , 2.5e-2  , 2.5e-2 }; 
+//float pidki[PIDNUMBER] = { 1.1e-1  , 0.5e-1 , 1.1e-1 };	
+//float pidkd[PIDNUMBER] = { 2.04e-1 , 3.0e-1  , 3.0e-1 };
+
 //6mm & 7mm Abduction Pids for whoops (Team Alienwhoop)- set filtering ALIENWHOOP_ZERO_FILTERING or default beta filters
 //                         ROLL       PITCH     YAW
 //float pidkp[PIDNUMBER] = {21.5e-2 , 21.5e-2  , 10.5e-1 }; 
@@ -130,6 +137,7 @@ float pidkd_init[PIDNUMBER] = { 0, 0, 0 };
 //************************************Setpoint Weight & Limits********************************
 		// "p term setpoint weighting" 0.0 - 1.0 where 1.0 = normal pid
 	#define ENABLE_SETPOINT_WEIGHTING
+	// PROPORTIONAL SETPOINT WEIGHTING ONLY USED IN LEVELMODE
 	//            Roll   Pitch   Yaw
 	float b[3] = { 1.00 , 1.00 , 1.00};
 
@@ -175,9 +183,6 @@ extern int levelmode_override;
 // multiplier for pids at 3V - for PID_VOLTAGE_COMPENSATION - default 1.33f from H101 code
 #define PID_VC_FACTOR 1.33f
 
-#ifdef SIMPSON_RULE_INTEGRAL
-static float lasterror2[PIDNUMBER];
-#endif
 
 float timefactor;
 
@@ -283,39 +288,30 @@ void apply_analog_aux_to_pids()
 }
 
 
-// pid calculation for acro ( rate ) mode
-// input: error[x] = setpoint - gyro
-// output: pidoutput[x] = change required from motors
 
 float pid(int x )
 { 
 	//wind down the integral error until craft is armed and throttle has passed limit to indicate launch
 	if ((onground) || (in_air == 0)) ierror[x] *= 0.98f;
-
-// pid tuning via analog aux channels
-#ifdef ANALOG_AUX_PIDS
+	// pid tuning via analog aux channels
+	#ifdef ANALOG_AUX_PIDS
 	apply_analog_aux_to_pids();
-#endif
-
-	
+	#endif
   static float avgSetpoint[3];
   static int count[3];
   extern float splpf( float in,int num );
   extern float rxcopy[4];	
 	extern float rxcentered[3];
-	
-	//Calculate average setpoint
+	//Calculate average setpoint fir transient windup detection
 	if ( x < 3 && (count[x]++ % 2) == 0 ) {
 		avgSetpoint[x] = splpf( setpoint[x], x );
 	}
-	
 	//need to describe manual/sport/ and axis 1 on racemode also must not be in failsafe/levelmode_override
 	if ((!aux[LEVELMODE] && !levelmode_override)|| (aux[LEVELMODE] && aux[RACEMODE] && !levelmode_override && (x == PITCH))){		
 //++++++++++++++++++ sport/acro pid stabilization ++++++++++++++++++
 		//make the default state to not accumulate I
-    int iwindup = 1;
-		
-//Check for defelction against the autocentered stick value (if raw sticks are in the 10% range		
+    int iwindup = 1;	
+		//Check for defelction against the autocentered stick value - only allow i term to build when "hands off" sticks / freeze i term when stick are moving slowly
 		if (x < 3 && fabsf(rxcopy[x]) < 0.10f){																	//if sticks are in trimable range near center - we might allow I term to fight rotation	
 			if (fabsf( rxcentered[x] ) < 0.01f) {																	//allow i term to build if sticks are very close to not moving at all
 				iwindup = 0;					 																																
@@ -323,38 +319,31 @@ float pid(int x )
 				iwindup = 1;
 			}
 		}
-
+		//Check for transient windup trigger - sticks have been moved fast and i term needs to be relaxed to 0
 		if ( x < 3 && fabsf( setpoint[x] - avgSetpoint[x] ) > 0.1f ) {
 			iwindup = 2;
-		}	
-		
+		}		
     if ( !iwindup)
     {		
 				//Base Integral off Gyro and not error...aka assume setoint is always 0
         // assuming similar time intervals
         ierror[x] = ierror[x] + 0.166666f* (lasterror2[x] + 4*lasterror[x] - gyro[x]) *  pidki[x] * looptime;	
         lasterror2[x] = lasterror[x];
-        lasterror[x] = -gyro[x];
-				
+        lasterror[x] = -gyro[x];		
     } else {
 				if ( iwindup == 2) ierror[x] *= 0.98f;	//reduce I - error towards 0 quickly while sticks are moving
-		}
-            
+		}      
     limitf( &ierror[x] , integrallimit[x] );
-    
-    
     // P term with setpoint weight of 0
-    pidoutput[x] -= pidkp[x] * gyro[x];
-		
+		pidoutput[x] = 0;
+    pidoutput[x] += - pidkp[x] * gyro[x];
     // I term	
 		if (aux[CH_AUX1]){
 			pidoutput[x] += ierror[x];
 		}
-
     // D term
     // skip axis D term if not set               
-    if ( pidkd[x] > 0 ){
-			
+    if ( pidkd[x] > 0 ){	
         #if (defined DTERM_LPF_1ST_HZ && !defined ADVANCED_PID_CONTROLLER)
         float dterm;
         static float lastrate[3];
@@ -442,27 +431,21 @@ float pid(int x )
     {
         iwindup = 1;		
     }
-    
     if (( pidoutput[x] == -outlimit[x])&& ( error[x] < 0) )
     {
         iwindup = 1;				
     } 
- 
 		if ( x < 2 && fabsf( setpoint[x] - avgSetpoint[x] ) > 0.1f ) {
 			iwindup = 1;
 		}
-		
     if ( !iwindup)
     {
         // assuming similar time intervals
         ierror[x] = ierror[x] + 0.166666f* (lasterror2[x] + 4*lasterror[x] + error[x]) *  pidki[x] * looptime;	
         lasterror2[x] = lasterror[x];
         lasterror[x] = error[x];			
-    }
-            
-    limitf( &ierror[x] , integrallimit[x] );
-    
-    
+    }       
+    limitf( &ierror[x] , integrallimit[x] );  
     #ifdef ENABLE_SETPOINT_WEIGHTING
     // P term
     pidoutput[x] = error[x] * ( b[x])* pidkp[x];				
@@ -472,10 +455,8 @@ float pid(int x )
     // P term with b disabled
     pidoutput[x] = error[x] * pidkp[x];
     #endif	
-		
     // I term	
     pidoutput[x] += ierror[x];
-
     // D term
     // skip yaw D term if not set               
     if ( pidkd[x] > 0 ){
@@ -557,12 +538,10 @@ float pid(int x )
 						lastrate[x] = gyro[x];	
             dterm = lpf2(  dterm, x );
             pidoutput[x] += dterm;		
-				#endif
-				
-    }
-				
+				#endif			
+    }			
 	}	
-	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	limitf(  &pidoutput[x] , outlimit[x]);
 	return pidoutput[x];		 		
 }
