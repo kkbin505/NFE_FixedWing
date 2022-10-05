@@ -28,7 +28,6 @@ void apply_rate_mixer(){	//used in levelmode & horizon
 	mix[MOTOR_FL] = (autocenter[PITCH]/2.0f) + 0.5f + pidoutput[PITCH];   // M1			Elevator
 	mix[MOTOR_BR] = (autocenter[YAW]/2.0f) + 0.5f + pidoutput[YAW]; 	 		// M2			Rudder
 	mix[MOTOR_FR] = throttle; 																						// M3			Throttle		
-	invert_servo_throws();
 }
 
 
@@ -38,7 +37,6 @@ void apply_racemode_mixer(){	//used in racemode and racemode horizon
 	mix[MOTOR_FL] = ((rxcopy[1]+1.0f)/2.0f) + pidoutput[PITCH];				    // M1			Elevator
 	mix[MOTOR_BR] = (autocenter[YAW]/2.0f) + 0.5f + pidoutput[YAW]; 	 		// M2			Rudder
 	mix[MOTOR_FR] = throttle; 																						// M3			Throttle		
-	invert_servo_throws();
 }
 
 
@@ -47,7 +45,6 @@ void apply_manual_mixer(){	//no stabilization
 	mix[MOTOR_FL] = (rxcopy[1]+1.0f)/2.0f;   															// M1			Elevator
 	mix[MOTOR_BR] = (rxcopy[2]+1.0f)/2.0f;  															// M2			Rudder
 	mix[MOTOR_FR] = throttle; 																						// M3			Throttle
-	invert_servo_throws();
 }
 
 
@@ -56,9 +53,38 @@ void apply_sport_mixer(){	//nfe special sauce
 	mix[MOTOR_FL] = ((rxcopy[1]+1.0f)/2.0f) + pidoutput[PITCH];   				// M1			Elevator
 	mix[MOTOR_BR] = ((rxcopy[2]+1.0f)/2.0f) + pidoutput[YAW];  						// M2			Rudder
 	mix[MOTOR_FR] = throttle; 																						// M3			Throttle
-	invert_servo_throws();
 }
 
 
+void modify_mixer_outputs(){
+	
+	invert_servo_throws();
+	
+#ifdef TORQUE_BOOST
+	for ( int i = 0 ; i < 3 ; i++){			
+		float motord( float in , int x);           
+		mix[i] = motord(  mix[i] , i);
+	}
+#endif  
+	
+}
 
+#ifndef TORQUE_BOOST
+    #define TORQUE_BOOST   0.0
+#endif
+ float motord( float in , int x)
+ {
+   float factor = TORQUE_BOOST;
+   static float lastratexx[4][4];
+     
+        float out  =  ( + 0.125f *in + 0.250f * lastratexx[x][0]
+                    - 0.250f * lastratexx[x][2] - ( 0.125f) * lastratexx[x][3]) * factor; 						;
+
+        lastratexx[x][3] = lastratexx[x][2];
+        lastratexx[x][2] = lastratexx[x][1];
+        lastratexx[x][1] = lastratexx[x][0];
+        lastratexx[x][0] = in;
+        
+    return in + out;
+ }
 

@@ -62,7 +62,7 @@ float	throttle;
 int idle_state;
 float mix[4];
 float thrsum;
-float motormap( float input);
+float servo_pwm(float mixer_output);
 
 
 void control( void)
@@ -180,29 +180,17 @@ apply_flight_modes();
 			}else{
 				apply_sport_mixer();						// sport/acro mixer is the default with all flight mode aux set to off
 			}		
-		}
+		}        
+	}
+	
+	modify_mixer_outputs();
 
-#ifdef TORQUE_BOOST
-		for ( int i = 0 ; i < 3 ; i++){			
-			float motord( float in , int x);           
-			mix[i] = motord(  mix[i] , i);
-		}
-#endif         
- 
-	}// end armed/motor on logic - send pwm signals next
-
-	//begin for loop to send out pwm signals
-	for ( int i = 0 ; i <= 3 ; i++){
-		//***********************Send Motor PWM Command Logic			
+//***********************Send Motor PWM Command Logic
+	for ( int i = 0 ; i <= 3 ; i++){				
 		//***********************Clip mmixer outputs 
-			if ( mix[i] < 0 ) mix[i] = 0;    
-			if ( mix[i] > 1 ) mix[i] = 1;
-			mix[i] = .001f * ( PWMFREQ + ( PWMFREQ * mix[i] ) ); //Normalize mixer output to servo pulses, compensating for pwm frequency
-		#ifdef PWM_MOSFET_INVERSION	
-			//the line below inverts the signal when using a brushed FC through the mosfets
-			mix[i] = 1.0f - mix[i];
-		#endif
-		pwm_set( i ,motormap( mix[i] ) );	
+		if ( mix[i] < 0 ) mix[i] = 0;    
+		if ( mix[i] > 1 ) mix[i] = 1;
+		pwm_set( i , servo_pwm( mix[i] ) );	
 	}
 	//***********************End Motor PWM Command Logic
 	
@@ -210,25 +198,15 @@ apply_flight_modes();
 }
 // end of control function
 
-
-
-
-#ifndef TORQUE_BOOST
-    #define TORQUE_BOOST   0.0
+//float servo_pwm(float mixer_output);
+float servo_pwm (float mixer_output){
+	float pwm_pulse = .001f * ( PWMFREQ + ( PWMFREQ * mixer_output ) ); //Normalize mixer output to servo pulses, compensating for pwm frequency
+#ifdef PWM_MOSFET_INVERSION	
+	//the line below inverts the signal when using a brushed FC through the mosfets
+	mix[i] = 1.0f - mix[i];
 #endif
- float motord( float in , int x)
- {
-   float factor = TORQUE_BOOST;
-   static float lastratexx[4][4];
-     
-        float out  =  ( + 0.125f *in + 0.250f * lastratexx[x][0]
-                    - 0.250f * lastratexx[x][2] - ( 0.125f) * lastratexx[x][3]) * factor; 						;
+	return pwm_pulse;
+}
 
-        lastratexx[x][3] = lastratexx[x][2];
-        lastratexx[x][2] = lastratexx[x][1];
-        lastratexx[x][1] = lastratexx[x][0];
-        lastratexx[x][0] = in;
-        
-    return in + out;
- }
+
 
