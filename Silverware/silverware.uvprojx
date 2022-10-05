@@ -671,6 +671,16 @@
               <FileType>5</FileType>
               <FilePath>.\src\mixer.h</FilePath>
             </File>
+            <File>
+              <FileName>safety.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\safety.c</FilePath>
+            </File>
+            <File>
+              <FileName>safety.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\src\safety.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
