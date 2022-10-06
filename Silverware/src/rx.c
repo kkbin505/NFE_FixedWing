@@ -68,21 +68,21 @@ void apply_rates(){
 		if ( consecutive[i] > 750 && fabsf( rx[i]) < 0.1f ){
 			autocenter[i] = rx[i];
 		}
-	//apply high/low rates to rxcentered
-		rxcentered[i] = rxcentered[i] * rate_multiplier;
-	//apply expo normally but also cut expo by a factor of low rates multiplier when low rates are active
+		//rxcentered[] array is shifted by the detected amount autocenter[] to restore 0 centering even if pilot has trimmed the radio and is ready to be used by the pid controller for leveled modes
+		//the autocenter[] amount is the amount that each axis has been trimmed and this value will be forwarded to the mixer as a centerpoint for any leveled axis
+		//apply expo normally but also cut expo by a factor of low rates multiplier when low rates are active
 		if (get_flitemode_expo(i) > 0.01f) rxcentered[i] = rcexpo(rxcentered[i], (rate_multiplier * get_flitemode_expo(i)) );
-	//rxcentered[] is now adjusted back to 0 centering even if pilot has trimmed the radio and is ready to be used by the pid controller for leveled modes
-	//the autocenter[] amount is the amount that each axis has been trimmed and this value will be forwarded to the mixer as a centerpoint for any leveled axis
+		//now apply high/low rates to rxcentered as a map function instead of a factor so that expo does not cause low rates to come up short
+		rxcentered[ i ] = mapf( rxcentered[ i ], -1, 1, -rate_multiplier, rate_multiplier );	
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++		
-	//for sport and manual mode the rxcentered[] sticks need to be shifted back to restore pilot trims as rxcopy[i] is passed directly through the mixer
+		//for sport and manual mode the rxcentered[] sticks need to be shifted back to restore pilot trims as rxcopy[i] is passed directly through the mixer
 		rxcopy[i] = (rxcentered[i] + autocenter[i]);		
-	//but we need to scale and remap sticks since adding back the pilot trims will have shifted the detected stick range beyond 1 or -1
-	//the result should accept incoming sticks that are out of range due to trims and will stretch / squeeze throws to fit back into range at the expense of resolution
-	//but also need to compensate for low rates if selected just in case (this may be redundant)	
+		//but we need to scale and remap sticks since adding back the pilot trims will have shifted the detected stick range beyond 1 or -1
+		//the result should accept incoming sticks that are out of range due to trims and will stretch / squeeze throws to fit back into range at the expense of resolution
+		//but also need to compensate for low rates if selected just in case (this may be redundant)	
 		if (rxcopy[i] > autocenter[i]) rxcopy[i] = mapf( rxcopy[ i ], autocenter[i], rate_multiplier + autocenter[i], autocenter[i], rate_multiplier );
 		if (rxcopy[i] < autocenter[i]) rxcopy[i] = mapf( rxcopy[ i ], autocenter[i], -rate_multiplier + autocenter[i], autocenter[i], -rate_multiplier );		
-	//limit both rxcopy[] and rxcentered[] just in case (should have been done by the rcexpo function)
+		//limit both rxcopy[] and rxcentered[] just in case (should have been done by the rcexpo function)
 		limitf(&rxcopy[i], 1.0);
 		limitf(&rxcentered[i], 1.0);
 	//end for loop
