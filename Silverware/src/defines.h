@@ -5,10 +5,10 @@
 
 // defines for things that do not normally need changing
 
-#define MOTOR_BL 0	//Rudder   should be aileron
-#define MOTOR_FL 1	//Aileron	 should be elevator
-#define MOTOR_BR 2	//Elevator	should be rudder
-#define MOTOR_FR 3	//Throttle
+#define MOTOR_BL 0	//aileron
+#define MOTOR_FL 1	//elevator
+#define MOTOR_BR 2	//rudder
+#define MOTOR_FR 3	//throttle
 
 #define PIDNUMBER 3
 
@@ -125,36 +125,12 @@
 #define CHAN_OFF CH_OFF
 #endif
 
-// *************Select your preffered rate calculation format (define only one)
-#define SILVERWARE_RATES
-//#define BETAFLIGHT_RATES
 
+// *************SILVERWARE_RATES
 // *************rate in deg/sec
 // *************for acro mode
 #define MAX_RATE 360.0          //Roll & Pitch axis
 #define MAX_RATEYAW 360.0       //Yaw axis (used in acro and leveling modes)
-
-#ifdef BETAFLIGHT_RATES
-#define BF_RC_RATE_ROLL 1.00
-#define BF_RC_RATE_PITCH 1.00
-#define BF_RC_RATE_YAW 1.00
-#define BF_SUPER_RATE_ROLL 0.70
-#define BF_SUPER_RATE_PITCH 0.70
-#define BF_SUPER_RATE_YAW 0.70
-#define BF_EXPO_ROLL 0.00
-#define BF_EXPO_PITCH 0.00
-#define BF_EXPO_YAW 0.00
-#endif
-
-#ifdef BETAFLIGHT_RATES
-#define ACRO_EXPO_ROLL BF_EXPO_ROLL
-#define ACRO_EXPO_PITCH BF_EXPO_PITCH
-#define ACRO_EXPO_YAW BF_EXPO_YAW
-#define ANGLE_EXPO_ROLL BF_EXPO_ROLL
-#define ANGLE_EXPO_PITCH BF_EXPO_PITCH
-#define ANGLE_EXPO_YAW BF_EXPO_YAW
-#define MAX_RATE 200*(float)BF_RC_RATE_ROLL*(1/1-(float)BF_SUPER_RATE_ROLL)     // roll max rate used for flip sequencer when bf rates selected
-#endif
 
 
 // used for the pwm driver
@@ -245,14 +221,6 @@
 
 // failsafe time in uS
 #define FAILSAFETIME 1000000  // one second
-
-
-// enable motors if pitch / roll controls off center (at zero throttle)
-// possible values: 0 / 1
-// use in acro build only
-#define ENABLESTIX 0
-#define ENABLESTIX_TRESHOLD 0.3
-#define ENABLESTIX_TIMEOUT 1e6
 
 
 // define logic - do not change

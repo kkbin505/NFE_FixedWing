@@ -3,7 +3,7 @@
 #include "util.h"
 #include "math.h"
 
-extern float rxcopy[4];
+extern float rxcopy[3];
 extern char aux[AUXNUMBER];
 extern float rx[];
 extern float rates[3];

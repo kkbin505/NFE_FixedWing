@@ -3,14 +3,14 @@
 #include "defines.h"
 #include "math.h"
 
-extern float rxcopy[4];
+
 extern char aux[AUXNUMBER];
 extern float rx[];
 extern float throttle;
 extern int ledcommand;
 extern int levelmode_override;
 
-float rxcopy[4];
+float rxcopy[3];
 float rxcentered[3];
 float autocenter[3];
 float rates[3];

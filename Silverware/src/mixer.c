@@ -4,7 +4,7 @@
 extern float pidoutput[PIDNUMBER];
 extern float mix[4];
 extern float throttle;
-extern float rxcopy[4];
+extern float rxcopy[3];
 
 
 

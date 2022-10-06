@@ -300,7 +300,7 @@ float pid(int x )
   static float avgSetpoint[3];
   static int count[3];
   extern float splpf( float in,int num );
-  extern float rxcopy[4];	
+  extern float rxcopy[3];	
 	extern float rxcentered[3];
 	//Calculate average setpoint fir transient windup detection
 	if ( x < 3 && (count[x]++ % 2) == 0 ) {
@@ -356,7 +356,7 @@ float pid(int x )
         #endif
         
         #if (defined DTERM_LPF_1ST_HZ && defined ADVANCED_PID_CONTROLLER)
-				extern float rxcopy[4];		
+				extern float rxcopy[3];		
         float dterm;		
 				float transitionSetpointWeight[3];
 				float stickAccelerator[3];
@@ -473,7 +473,7 @@ float pid(int x )
         #endif
         
         #if (defined DTERM_LPF_1ST_HZ && defined ADVANCED_PID_CONTROLLER)
-				extern float rxcopy[4];		
+				extern float rxcopy[3];		
         float dterm;		
 				float transitionSetpointWeight[3];
 				float stickAccelerator[3];
