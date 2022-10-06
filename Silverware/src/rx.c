@@ -39,6 +39,13 @@ float get_flitemode_expo (int axis){
 	return 0;
 }
 
+//flight report 1-100601  finding an incompatibility with expo and autocentering algorithm.  Already there is the issue that computing expo in the flight controller
+//will always apply a curve to trims but it also reduces the applied trim range.  Maybe there is a way to match the trim setp better?  Moreover, when the autocentering algorithm finally detects a new center point ->
+//there is a small but sudden change in the trimmed servo position .... because the trim moves along the expo curve - but then the expo curve re-centers.
+//In order to keep this approach - it will need to track live in flight only for things like I term, but other things like stick expo recentering should only update on the ground.
+//Angle mode engaged and the results with the plane being out of trim were quite terrifying.  It really only needed small corrections but controls, while doing something for sure,  didnt feel intuitive and
+//I'm not sure how to fly the plane in this mode yet.  Couldnt make a turn before needing to switch out of angle.  Some of this is probably also cause by the same problem above - The impact of changing autocenter
+//live in flight needs to be re-evaluated.
 
 void apply_rates(){
 	//establish rate multiplier from high-low rates switch 
