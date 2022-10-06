@@ -151,7 +151,7 @@ float servo_pwm (float mixer_output){
 	float pwm_pulse = .001f * ( PWMFREQ + ( PWMFREQ * mixer_output ) ); //Normalize mixer output to servo pulses, compensating for pwm frequency
 #ifdef PWM_MOSFET_INVERSION	
 	//the line below inverts the signal when using a brushed FC through the mosfets
-	mix[i] = 1.0f - mix[i];
+	pwm_pulse = 1.0f - pwm_pulse;
 #endif
 	return pwm_pulse;
 }
