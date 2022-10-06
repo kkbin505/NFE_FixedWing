@@ -1,3 +1,4 @@
+#include "defines.h"
 
 
 extern int armed_state;
@@ -6,8 +7,8 @@ extern int arming_release;
 extern int binding_while_armed;
 extern int rx_ready;
 extern float rx[];
-extern int failsafe;
-extern int idle_state;
+extern char aux[AUXNUMBER];
+extern int ledcommand;
 
 float	throttle;
 int idle_state;

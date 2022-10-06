@@ -193,42 +193,42 @@
         <Ww>
           <count>8</count>
           <WinNumber>1</WinNumber>
-          <ItemText>debug</ItemText>
+          <ItemText>vbatt</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>1</WinNumber>
-          <ItemText>vbatt</ItemText>
+          <ItemText>pidkp</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>1</WinNumber>
-          <ItemText>minindex</ItemText>
+          <ItemText>pidki</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>1</WinNumber>
-          <ItemText>pidkp,0x10</ItemText>
+          <ItemText>pidkd</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>1</WinNumber>
-          <ItemText>pidkd</ItemText>
+          <ItemText>rx</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>1</WinNumber>
-          <ItemText>pidki</ItemText>
+          <ItemText>rxcopy</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>1</WinNumber>
-          <ItemText>rx_centered</ItemText>
+          <ItemText>rxcentered</ItemText>
         </Ww>
         <Ww>
           <count>15</count>
           <WinNumber>1</WinNumber>
-          <ItemText>rxcopy</ItemText>
+          <ItemText>autocenter</ItemText>
         </Ww>
         <Ww>
           <count>16</count>
@@ -239,6 +239,11 @@
           <count>17</count>
           <WinNumber>1</WinNumber>
           <ItemText>mix</ItemText>
+        </Ww>
+        <Ww>
+          <count>18</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>levelmode_override</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
