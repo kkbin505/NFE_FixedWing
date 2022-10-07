@@ -70,6 +70,12 @@ void limitf ( float *input , const float limit)
 	if (*input < - limit) *input = - limit;		
 }
 
+void limitrangef ( float *input , const float lower_limit, const float upper_limit)
+{
+	if (*input > upper_limit) *input = upper_limit;
+	if (*input < lower_limit) *input = lower_limit;	
+}
+
 float rcexpo ( float in , float exp )
 {
 	if ( exp > 1 ) exp = 1;
