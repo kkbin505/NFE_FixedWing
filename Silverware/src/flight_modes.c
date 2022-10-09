@@ -3,7 +3,7 @@
 #include "util.h"
 #include "math.h"
 
-extern float rxcopy[3];
+extern float rxcentered[3];
 extern char aux[AUXNUMBER];
 extern float rx[];
 extern float rates[3];
@@ -23,7 +23,7 @@ if (aux[LEVELMODE] || levelmode_override){
 	extern float GEstG[3]; // gravity vector for yaw feedforward
 	float yawerror[3] = {0}; // yaw rotation vector
 	// calculate roll / pitch error
-	stick_vector( rxcopy , 0 );
+	stick_vector( rxcentered , 0 );
 	// apply yaw from the top of the quad 
 	yawerror[0] = GEstG[1] * rates[2];
 	yawerror[1] = - GEstG[0] * rates[2];
@@ -71,7 +71,7 @@ if (aux[LEVELMODE] || levelmode_override){
 			}else{
 					angleFade = 1;}
 			float stickFade;
-			float deflection = fabsf(rxcopy[0]);
+			float deflection = fabsf(rxcentered[0]);
 			if (deflection <= HORIZON_STICK_TRANSITION){
 					stickFade = deflection/HORIZON_STICK_TRANSITION;
 			}else{
@@ -110,7 +110,7 @@ if (aux[LEVELMODE] || levelmode_override){
 						angleFade = 1;
 					}
 					float stickFade;
-					float deflection = fabsf(rxcopy[i]);
+					float deflection = fabsf(rxcentered[i]);
 					if (deflection <= HORIZON_STICK_TRANSITION){
 						stickFade = deflection/HORIZON_STICK_TRANSITION;
 					}else{
