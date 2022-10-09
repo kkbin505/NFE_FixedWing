@@ -268,6 +268,9 @@
 //#############################################################################################################################
 //#############################################################################################################################
 
+// This is the limit of raw stick deflection that can be detected as "trim".
+#define AUTOCENTER_TRIM_LIMIT 0.25f
+
 //enables use of stick accelerator and stick transition for d term lpf 1 & 2
 #define ADVANCED_PID_CONTROLLER
 

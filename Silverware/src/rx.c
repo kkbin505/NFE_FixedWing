@@ -92,7 +92,7 @@ void apply_rates(){
 			consecutive[i] = 0;
 		}
 		lastrx[i] = rx[i];
-		if ( consecutive[i] > 750 && fabsf( rx[i]) < 0.25f ){		//make sure we are in the linear range of expo where trims are accepted
+		if ( consecutive[i] > 750 && fabsf( rx[i]) < AUTOCENTER_TRIM_LIMIT ){		//make sure we are in the linear range of expo where trims are accepted
 			autocenter[i] = rx[i];																//the raw value from -1 to 1 that transmitter has been trimmed
 			trim[i] = (1 - get_axis_expo(i)) * rx[i];							//the actual amount that the control surfaces deflect due to raw trim (need only compute this by the linear portion of an expo curve)
 			//One unavoidable limitation of expo on FC is that transmitter trims will always be run through the expo function which reduces their throw.
