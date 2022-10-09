@@ -268,7 +268,10 @@
 //#############################################################################################################################
 //#############################################################################################################################
 
-// This is the limit of raw stick deflection that can be detected as "trim".
+//Unicorn Expo adds two degrees of exponential for a longer linear portion near center stick for increased trimmable range.
+#define UNICORN_EXPO
+
+// This is the limit of raw stick deflection that can be detected as "trim".  Suggested 0.01f without UNICORN_EXPO and up to 0.25f with
 #define AUTOCENTER_TRIM_LIMIT 0.25f
 
 //enables use of stick accelerator and stick transition for d term lpf 1 & 2

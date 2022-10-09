@@ -56,7 +56,11 @@ float apply_unicorn_expo_rates(float in, float rates, float exp){
 	//the linear portion of an expo curve
 	float linear = in * (1 - exp);
 	//the curve portion of the expo curve with unicorn magic for low rates
+	#ifdef UNICORN_EXPO
 	float curve = (in * in * in * in * in * exp) * ( (rates - (1 - exp)) / exp);
+	#else
+	float curve = (in * in * in * exp) * ( (rates - (1 - exp)) / exp);
+	#endif
 	return (linear + curve);
 }
 
