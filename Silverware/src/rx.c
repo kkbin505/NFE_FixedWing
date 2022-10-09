@@ -109,7 +109,7 @@ void apply_rates(){
 		//Unicorn rates are magic - they stay linear where trims take place near center stick and then manipulate curved part of expo to accomplish high and low rates
 		if (fabsf(get_axis_expo(i)) > 0.01f) rxcentered[i] = apply_unicorn_expo_rates(rxcentered[i], rate_multiplier, get_axis_expo(i) );
 		//for sport and manual mode the rxcentered[] sticks need to be shifted back to restore pilot trims as rxcopy[i] is passed directly through the mixer
-		rxcopy[i] = (rxcentered[i] + autocenter[i]);	
+		rxcopy[i] = (rxcentered[i] + trim[i]);	
 		
 		//Is this all wrong below?  The purpose of trim is to find neutral on a control surface.  If things are even close to mechanically set up correctly then
 		//we should need 1000us of throw on either side of the trimmed neutral position.  Scaling will probably just cause an imbalance in control surface deflection authority
