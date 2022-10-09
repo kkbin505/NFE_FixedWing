@@ -26,16 +26,16 @@
 
 // *************EXPO from 0.00 to 1.00 , 0 = no exp
 // *************positive = less sensitive near center 
-#define ACRO_EXPO_ROLL 0.75
-#define ACRO_EXPO_PITCH 0.75
-#define ACRO_EXPO_YAW 0.75
+#define ACRO_EXPO_ROLL 0.65
+#define ACRO_EXPO_PITCH 0.65
+#define ACRO_EXPO_YAW 0.65
 
 #define ANGLE_EXPO_ROLL 0.55
 #define ANGLE_EXPO_PITCH 0.0
 #define ANGLE_EXPO_YAW 0.55
 
 // *************max angle for level mode
-#define LEVEL_MAX_ANGLE 45.0f
+#define LEVEL_MAX_ANGLE 60.0f
 
 // ************* low rates multiplier if rates are assigned to a channel
 #define LOW_RATES_MULTI 0.5f
