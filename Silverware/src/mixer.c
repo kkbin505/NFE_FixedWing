@@ -24,18 +24,18 @@ void invert_servo_throws(){
 void apply_rate_mixer(){	//used in levelmode & horizon
 	//for the rate based mixer we take the raw stick conversion factor and plug in a neutral starting point (0.5) plus any detected trim which needs to be retained (autocenter[axis]/2 since we scale total stick range from 2 to 1).
 	extern float trim[3];
-	mix[MOTOR_BL] = (trim[ROLL]/2.0f) + 0.5f + pidoutput[ROLL];			// M0			Aileron
-	mix[MOTOR_FL] = (trim[PITCH]/2.0f) + 0.5f + pidoutput[PITCH];   // M1			Elevator
-	mix[MOTOR_BR] = (trim[YAW]/2.0f) + 0.5f + pidoutput[YAW]; 	 		// M2			Rudder
+	mix[MOTOR_BL] = (trim[ROLL]/2.0f) + 0.5f + pidoutput[ROLL];						// M0			Aileron
+	mix[MOTOR_FL] = (trim[PITCH]/2.0f) + 0.5f + pidoutput[PITCH];   			// M1			Elevator
+	mix[MOTOR_BR] = ((rxcopy[2]+1.0f)/2.0f) + pidoutput[YAW];	 	 					// M2			Rudder
 	mix[MOTOR_FR] = throttle; 																						// M3			Throttle		
 }
 
 
 void apply_racemode_mixer(){	//used in racemode and racemode horizon
 	extern float trim[3];
-	mix[MOTOR_BL] = (trim[ROLL]/2.0f) + 0.5f + pidoutput[ROLL];			// M0			Aileron
+	mix[MOTOR_BL] = (trim[ROLL]/2.0f) + 0.5f + pidoutput[ROLL];						// M0			Aileron
 	mix[MOTOR_FL] = ((rxcopy[1]+1.0f)/2.0f) + pidoutput[PITCH];				    // M1			Elevator
-	mix[MOTOR_BR] = (trim[YAW]/2.0f) + 0.5f + pidoutput[YAW]; 	 		// M2			Rudder
+	mix[MOTOR_BR] = ((rxcopy[2]+1.0f)/2.0f) + pidoutput[YAW];	 	 					// M2			Rudder
 	mix[MOTOR_FR] = throttle; 																						// M3			Throttle		
 }
 

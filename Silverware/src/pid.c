@@ -306,8 +306,8 @@ float pid(int x )
 	if ( x < 3 && (count[x]++ % 2) == 0 ) {
 		avgSetpoint[x] = splpf( setpoint[x], x );
 	}
-	//need to describe manual/sport/ and axis 1 on racemode also must not be in failsafe/levelmode_override
-	if ((!aux[LEVELMODE] && !levelmode_override)|| (aux[LEVELMODE] && aux[RACEMODE] && !levelmode_override && (x == PITCH))){		
+	//need to describe (manual/sport) or (axis 1 on racemode also must not be in failsafe/levelmode_override) or (yaw - all the time)
+	if (  (!aux[LEVELMODE] && !levelmode_override)  ||  (aux[LEVELMODE] && aux[RACEMODE] && !levelmode_override && (x == PITCH))  ||  x== YAW  ){	
 //++++++++++++++++++ sport/acro pid stabilization ++++++++++++++++++
 		//make the default state to not accumulate I
     int iwindup = 1;	
@@ -320,7 +320,7 @@ float pid(int x )
 			}
 		}
 		//Check for transient windup trigger - sticks have been moved fast and i term needs to be relaxed to 0
-		if ( x < 3 && fabsf( setpoint[x] - avgSetpoint[x] ) > 0.1f ) {
+		if (( fabsf( setpoint[x] - avgSetpoint[x] ) > 0.1f ) || (aux[LEVELMODE] && x==YAW)) {
 			iwindup = 2;
 		}		
     if ( !iwindup)
@@ -338,7 +338,7 @@ float pid(int x )
 		pidoutput[x] = 0;
     pidoutput[x] += - pidkp[x] * gyro[x];
     // I term	
-		if (aux[CH_AUX1]){
+		if (aux[CH_AUX1] && !aux[LEVELMODE]){	//need to fix this here for only a yaw block
 			pidoutput[x] += ierror[x];
 		}
     // D term
