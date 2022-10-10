@@ -220,9 +220,6 @@
 
 //**********************************************************************************************************************
 //***********************************************MOTOR OUTPUT SETTINGS**************************************************
-
-// minimum motor output: *for brushed a % value (0.0 - 100.0)   *for brushless this sets digital idle % for DSHOT for any selection
-//#define MOTOR_MIN_COMMAND  5.0
 	
 // *************makes throttle feel more poppy and responsive to quick changes
 //#define THROTTLE_BOOST 
@@ -313,6 +310,8 @@
 //Do not uncomment this - it changes the 0 throttle behavior regarding inair flags 
 #define IDLE_UP ARMING
 
+// minimum motor output: *for brushed a % value (0.0 - 100.0)   *for brushless this sets digital idle % for DSHOT for any selection
+//#define MOTOR_MIN_COMMAND  5.0
 
 
 
