@@ -35,7 +35,7 @@
 #define ANGLE_EXPO_YAW 0.55
 
 // *************max angle for level mode
-#define LEVEL_MAX_ANGLE 60.0f
+#define LEVEL_MAX_ANGLE 70.0f
 
 // ************* low rates multiplier if rates are assigned to a channel
 #define LOW_RATES_MULTI 0.5f
@@ -95,7 +95,7 @@
 // *************LLD / RRD Stick Gesture - AUX 1 is currently tied to integral activity in SPORT/ACRO mode.  Uncommented will boot the FC 
 // *************with integral inactive and require the RRD for fully stabilized SPORT/ACRO mode with integral.  It is suggested to maiden and
 // *************manually trim the plane with AUX1 in the OFF position.
-//#define AUX1_START_ON
+#define AUX1_START_ON
 
 // *************ANALOG AUX CHANNELS
 #define USE_ANALOG_AUX
@@ -107,13 +107,13 @@
 //#define ANALOG_RP_D  CHAN_15
 //#define ANALOG_RP_PD CHAN_15 // Adjust Roll and Pitch P & D together
 //#define ANALOG_R_P   CHAN_11 // Adjust Roll only
-#define ANALOG_R_I   CHAN_12
+//#define ANALOG_R_I   CHAN_12
 //#define ANALOG_R_D   CHAN_12
 //#define ANALOG_P_P   CHAN_14 // Adjust Pitch only
 //#define ANALOG_P_I   CHAN_14
 //#define ANALOG_P_D   CHAN_15
 //#define ANALOG_Y_P   CHAN_14 // Adjust Yaw only
-#define ANALOG_Y_I   CHAN_11
+//#define ANALOG_Y_I   CHAN_11
 //#define ANALOG_Y_D   CHAN_15
 
 
@@ -125,7 +125,8 @@
 // ************* Set your lipo cell count to override auto cell count detect logic
 //#define LIPO_CELL_COUNT 1
 
-#define LEVELMODE_PID_ATTENUATION 0.90f  //used to prevent oscillations in angle modes with pid_voltage_compensation enabled due to high pids
+//currently disconnected
+#define LEVELMODE_PID_ATTENUATION 0.90f  //could be used to prevent wing rock oscillations in angle modes on roll axis
 
 // *************lower throttle when battery below threshold - forced landing low voltage cutoff
 // *************THIS FEATURE WILL BE OFF BY DEFAULT EVEN WHEN DEFINED - USE STICK GESTURE LEFT-LEFT-LEFT TO ACTIVATE THEN DOWN-DOWN-DOWN TO SAVE AS ON
@@ -282,7 +283,8 @@
 #define THROTTLE_SAFETY .10f
 
 //Activating this setting makes the accelerometer less prone to drift or yaw slow down in angle mode but more likely to become confused in crashes or impacts.  Only use if necessary
-//#define ACCELEROMETER_DRIFT_FIX
+//There may not be a downside to this increased filtering on fixed wing
+#define ACCELEROMETER_DRIFT_FIX
 
 // level mode "manual" trims ( in degrees)
 // pitch positive forward

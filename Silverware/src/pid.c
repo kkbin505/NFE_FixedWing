@@ -63,8 +63,8 @@ float stickTransitionProfileB[3]  = { 0.5 , 0.5 , 0.5};           //keep values 
 //************************************PIDS****************************************
 //Servo Pids for Fixed Wing
 //                         ROLL       PITCH     YAW
-float pidkp[PIDNUMBER] = { 1.94e-2 , 2.5e-2  , 2.5e-2 }; 
-float pidki[PIDNUMBER] = { 1.1e-1  , 0.5e-1 , 1.1e-1 };	
+float pidkp[PIDNUMBER] = { 1.74e-2 , 2.5e-2  , 2.5e-2 }; 
+float pidki[PIDNUMBER] = { 1.1e-1  , 1.1e-1 , 1.1e-1 };	
 float pidkd[PIDNUMBER] = { 2.04e-1 , 3.0e-1  , 3.0e-1 };
 
 
