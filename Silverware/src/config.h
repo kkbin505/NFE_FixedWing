@@ -289,7 +289,7 @@
 // level mode "manual" trims ( in degrees)
 // pitch positive forward
 // roll positive right
-#define TRIM_PITCH 0.0
+#define TRIM_PITCH -10.0
 #define TRIM_ROLL 0.0
 
 // flash saving features
