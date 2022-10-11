@@ -410,8 +410,8 @@ need a workover for I term like sport mode.  Overall levelmode at this point is 
  bank angel and sometimes I cant as easily or at all.  Also pitch authority while roll is banked is close to non existant.  So a bank and yank turn still needs a huge flying space.  Addition of the 
 sport mode based rudder brings around any turn in a small space but this sport mode yaw is not going to be suitable for kids/new pilots - it can do a flat spin in levelmode and 
 that's just too much for the intention of levelmode.  The craft retains its level orientation without issue even with a full 3d yaw deflection - but stick banging yaw by a new pilot will cause a
-sudden loss of altitude (think flat spin).  Otherwise levelmode is a home run especially for low speed 3d - can harrier around all day without wing rock or loss of control 
-Failsafe comes down in levelmode and if the pitch trim on the accelerometer is tweaked correctly - lands nicely
+sudden loss of altitude (think flat spin).  Otherwise levelmode is a home run especially for low speed 3d training- can harrier around all day without wing rock or loss of control 
+Failsafe comes down in levelmode and if the pitch trim on the accelerometer is tweaked correctly - lands nicely.  Engaging level in all sorts of crazy orientations results in a predictable and gentle return to level orientation.
 Lower gains in anglepid.c were tested today and I think I have discovered the lower limits and have butter smooth control - almost too disconnected and slow for emergency corrections
 and many crashes were avoided by having sportmode yaw and using that yaw input to get out away from obstacles.
 Today I turned back up the integral gain on pitch  - gusseting in a high speed knife edge was reduced and i didnt feel like i was fighting I gains too much when level as had so in the past - 
