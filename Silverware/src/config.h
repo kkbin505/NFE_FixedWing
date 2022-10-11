@@ -402,7 +402,7 @@
 
 
 /*NFE Notes
-101022 Flight report - tested ACCELEROMETER_DRIFT_FIX define - performance in fixed wing angle was much worse.  Gravity vector system got confused very fast untill roll was
+101022 Flight report - tested ACCELEROMETER_DRIFT_FIX define and removed it from defaults - performance in fixed wing angle w/this was much worse than drones.  Gravity vector system got confused very fast untill roll was
 still being leveled but no longer responding to input.  I suspect the vector is losing its length again somehow like it did on drones for yaw?  Eventually roll input created
 a sharp pitch up response.  Total nonsense.  Without this define it took multiple 15 minute flights of carving around in levelmode before i encountered one gravity vector issue
 presenting on roll axis as a loss of stick response.  Last few days have been focused on getting a levelmode working better.  I think a rate based yaw may still be a good solution but it will 
@@ -417,10 +417,14 @@ and many crashes were avoided by having sportmode yaw and using that yaw input t
 Today I turned back up the integral gain on pitch  - gusseting in a high speed knife edge was reduced and i didnt feel like i was fighting I gains too much when level as had so in the past - 
 I think prior issues here were due to growing pains of getting unicorn rates all in sync as rx[] gets shifted, expo'd, and then shifted back.
 The trim range of unicorn rates seems acceptable and allows for a pretty wide range of centered trim points without leaving the linear band and then causing a loss of trim when switching to low rates.
-
+Last note from today - for the first time i seem to have realized my roll rate in sportacro is faster to one side than the other.  Was hard to evaluate and switching to manual mode
+didnt provide any clear insight.  Seems like i feel it too in angle mode.  This could just be torque from the motor throwing me off, and i did have one aileron pushrod in the wrong hole.
+Maybe this is all just physics, but i can't help but worry if something in the pid loop is pushing the wrong way to one side.  Elevator pid response also seems less than rudder and ailerons - 
+and again here i can't rule out mechanical setup but it certainly seems the same as the other axis.  Maybe it's just my imagination
 
 thoughts after today's session 
-- racemode needs to be renamed to something more applicable to planes
+- racemode needs to be renamed to something more applicable to planes like DIGITAL_DIHEDRAL
+- DIGITAL_DIHEDRAL could be a whole new flight mode as a sum of the levelmode and sportmode controls and might behave more like an actual dihedral wing
 - a heading lock (i term) can be implimented in levelmodes for yaw but it is going to need to release on either yaw or roll input instead of just yaw
 - need more pitch authority in levelmode while banked
 - need to test slightly higher gains in anglepid.c
@@ -429,7 +433,21 @@ thoughts after today's session
 
 
 
+code todo list:
+- rework pid.c - this is becoming an absolute mess and needs organization especially with regard to how different combos of pid calculations and i term behavior are required for different flight modes
+- levelmode pid attenuation
+-	launch mode in levelmode with pitch up till sticks are engaged
+- launch mode with throttle delay for pushers
+- better i term relax trigger and stick boost that isnt influenced be acro rates selections
 
+
+testing todo list:
+-evaluate 1st vs 2nd order D term filters and eliminate one of them if unneeded
+-levelmode pid attenuation on roll - need to decide if I like higher roll gains in sport mode
+-test torque boost
+-crank up stick boost again
+-lower default acro rates and see how this impacts i term relax trigger and stick boost
+-figure out why there is so little elevator authority when banked on roll
 
 
 
