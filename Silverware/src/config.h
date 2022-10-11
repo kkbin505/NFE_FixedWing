@@ -398,3 +398,43 @@
 // ************* Raises pids automatically as battery voltage drops in flight.  Ensure voltage is calibrated before use ****CRITICAL****.
 //#define PID_VOLTAGE_COMPENSATION
 
+
+
+
+/*NFE Notes
+101022 Flight report - tested ACCELEROMETER_DRIFT_FIX define - performance in fixed wing angle was much worse.  Gravity vector system got confused very fast untill roll was
+still being leveled but no longer responding to input.  I suspect the vector is losing its length again somehow like it did on drones for yaw?  Eventually roll input created
+a sharp pitch up response.  Total nonsense.  Without this define it took multiple 15 minute flights of carving around in levelmode before i encountered one gravity vector issue
+presenting on roll axis as a loss of stick response.  Last few days have been focused on getting a levelmode working better.  I think a rate based yaw may still be a good solution but it will 
+need a workover for I term like sport mode.  Overall levelmode at this point is functional but something still feels kinda wrong.  It seems sometimes I can hit the full user defined
+ bank angel and sometimes I cant as easily or at all.  Also pitch authority while roll is banked is close to non existant.  So a bank and yank turn still needs a huge flying space.  Addition of the 
+sport mode based rudder brings around any turn in a small space but this sport mode yaw is not going to be suitable for kids/new pilots - it can do a flat spin in levelmode and 
+that's just too much for the intention of levelmode.  The craft retains its level orientation without issue even with a full 3d yaw deflection - but stick banging yaw by a new pilot will cause a
+sudden loss of altitude (think flat spin).  Otherwise levelmode is a home run especially for low speed 3d - can harrier around all day without wing rock or loss of control 
+Failsafe comes down in levelmode and if the pitch trim on the accelerometer is tweaked correctly - lands nicely
+Lower gains in anglepid.c were tested today and I think I have discovered the lower limits and have butter smooth control - almost too disconnected and slow for emergency corrections
+and many crashes were avoided by having sportmode yaw and using that yaw input to get out away from obstacles.
+Today I turned back up the integral gain on pitch  - gusseting in a high speed knife edge was reduced and i didnt feel like i was fighting I gains too much when level as had so in the past - 
+I think prior issues here were due to growing pains of getting unicorn rates all in sync as rx[] gets shifted, expo'd, and then shifted back.
+The trim range of unicorn rates seems acceptable and allows for a pretty wide range of centered trim points without leaving the linear band and then causing a loss of trim when switching to low rates.
+
+
+thoughts after today's session 
+- racemode needs to be renamed to something more applicable to planes
+- a heading lock (i term) can be implimented in levelmodes for yaw but it is going to need to release on either yaw or roll input instead of just yaw
+- need more pitch authority in levelmode while banked
+- need to test slightly higher gains in anglepid.c
+- need to examine the threshold for i-term relax (iwindup=2 state) - this is still tied to setpoint variable as is the D term's stick boost response.  When lower acro
+	rates are configured by a user - i think this is causing I term to be too sticky (not triggering iwindup=2) and is reducing the affect of stick boost
+
+
+
+
+
+
+
+
+
+
+
+*/
