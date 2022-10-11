@@ -30,9 +30,9 @@
 #define ACRO_EXPO_PITCH 0.65
 #define ACRO_EXPO_YAW 0.65
 
-#define ANGLE_EXPO_ROLL 0.55
-#define ANGLE_EXPO_PITCH 0.0
-#define ANGLE_EXPO_YAW 0.55
+#define ANGLE_EXPO_ROLL 0.55	//not used yet
+#define ANGLE_EXPO_PITCH 0.0	//not used yet
+#define ANGLE_EXPO_YAW 0.55		//not used yet
 
 // *************max angle for level mode
 #define LEVEL_MAX_ANGLE 70.0f
@@ -79,7 +79,7 @@
 #define RACEMODE   CHAN_OFF
 #define HORIZON    CHAN_OFF
 #define PIDPROFILE CHAN_9               //For switching stickAccelerator & stickTransition profiles on pid.c page
-#define RATES      CHAN_7
+#define RATES      CHAN_ON
 #define LEDS_ON    CHAN_OFF
 
 // *************switch for fpv / other, requires fet
@@ -94,7 +94,7 @@
 
 // *************LLD / RRD Stick Gesture - AUX 1 is currently tied to integral activity in SPORT/ACRO mode.  Uncommented will boot the FC 
 // *************with integral inactive and require the RRD for fully stabilized SPORT/ACRO mode with integral.  It is suggested to maiden and
-// *************manually trim the plane with AUX1 in the OFF position.
+// *************manually trim the plane with AUX1 in the OFF position (gesture LLD) or in manual mode.
 #define AUX1_START_ON
 
 // *************ANALOG AUX CHANNELS
@@ -199,7 +199,7 @@
 
 // *************pwm frequency for motor control
 // *************a higher frequency makes the servos work harder nd is only reccomended for digital servos
-// *************in Hz
+// *************in Hz (set between 50 and 400)
 #define PWMFREQ 50
 
 // *************torque boost is a highly eperimental feature.  it is a lpf D term on motor outputs that will accelerate the response
@@ -281,12 +281,12 @@
 
 //Activating this setting makes the accelerometer less prone to drift or yaw slow down in angle mode but more likely to become confused in crashes or impacts.  Only use if necessary
 //There may not be a downside to this increased filtering on fixed wing
-#define ACCELEROMETER_DRIFT_FIX
+//#define ACCELEROMETER_DRIFT_FIX
 
 // level mode "manual" trims ( in degrees)
 // pitch positive forward
 // roll positive right
-#define TRIM_PITCH -10.0
+#define TRIM_PITCH -8.0
 #define TRIM_ROLL 0.0
 
 // flash saving features
