@@ -431,14 +431,40 @@ thoughts after today's session
 - need to examine the threshold for i-term relax (iwindup=2 state) - this is still tied to setpoint variable as is the D term's stick boost response.  When lower acro
 	rates are configured by a user - i think this is causing I term to be too sticky (not triggering iwindup=2) and is reducing the affect of stick boost
 
+101222 Flight Report - Testing levelmode, sportmode & failsafe.  The new bank&yank levelmode continues to produce exactly the indended results.  Flight feels very natural and predictable 
+with only minor exceptions.  The I term on pitch is working it's tail off compensating for changes in airspeed with hands off sticks.  For normal fluid throttle changes - there is no 
+visible correction and it always tracks true.  However going from the edge of stall @ no throttle to full throttle abruptly will briefly balloon up as the pitch I term has been previously loaded 
+up in a trim up position and it takes a second for it to unwind itself.  I think the solution to this is to use an I-term relax trigger on throttle movement for the pitch I term just like the one applied to sportmode control surfaces 
+but make the trigger watch only for increases in throttle and only in the lower half of the throttle stick. This should keep i term active in a harrier when throttle is being pumped in the upper 
+range of the stick, maintain I term trim when cutting throttle, and isolate the ballooning event that occurs from a sudden jump from very low to very high airspeed.  This little hack only belongs on 
+levelmode.  It is not an issue in sportmode.  Failsafe behavior also tested today - Everything working as intended.  Failsafe when disarmed returns servos to neutral position.  Failsafe when armed 
+and in the air puts the plane in levelmode and it floats down out of the air in a perfectly level orientation and was even easily catchable during tests.  Return of control signal in the air 
+is also possible without incident.  My transmitter requires throttle to be @ 0% in order to link up - so i was not able to verify if the firmware in the plane is also going to require throttle to be 
+dropped below the throttle safety cutoff in order to regain control.  This relic of drone firmware might need some adaptation for fixed wing.  I don't mind that throttle needs to be dropped below 
+safety cutoff to reactivate throttle in the event of signal loss and return - but control surfaces should immediately respond upon return of signal.  Maybe I will hold levelmode active (but with surface control) 
+while waiting on the throttle safety to be satisfied and then restore aux selected flight mode with return of throttle.  Final note from failsafe testing is that currently levelmode is running with an unlocked
+(no I term) yaw axis.  Intention is to change this in the future for the sportmode heading hold logic, but for now - during failsafe the plane is only going to track as true as the rudder trim as it
+floats down.  Stuntmaster is always out of trim (sort of the reason i got into making a firmware) and it has been flying so true in sport mode that I have already forgotten how poorly this plane
+tracks.  Its no surprise that it slowly drifted off its line on the rudder... but this can be fixed as levelmode yaw logic is improved.  A brief flight was performed in manual mode - and it felt exactly 
+like flying the plane on a standard receiver - which is absolutely terrible.  Stuntmaster is a sloppy sloppy plane that never flies straight and can never be put in perfect trim.  I dont miss it flying 
+like this.  It makes me feel like a terrible pilot and it isnt enjoyable to watch it in the air either.  No changes have been made to sportmode - but some agressive hucking about before the packs were
+drained confirms that sportmode is still functioning as intended.  Sportmode makes the plane feel like an expensive high qualitty model instead of sloppy foam garbage and I get to feel like a better pilot
+and spend time practicing new 3D moves instead of just practicing trying to keep it going straight.
+
+thoughts after today's session
+- levelmode feels close enough to let the kids fly it
+
 
 
 code todo list:
 - rework pid.c - this is becoming an absolute mess and needs organization especially with regard to how different combos of pid calculations and i term behavior are required for different flight modes
-- levelmode pid attenuation
+- levelmode pid attenuation (maybe on roll axis only?)
 -	launch mode in levelmode with pitch up till sticks are engaged
 - launch mode with throttle delay for pushers
 - better i term relax trigger and stick boost that isnt influenced be acro rates selections
+- throttle triggered pitch I term relax
+- YAW heading hold in levelmode (relaxed by yaw, or roll + pitch deflections)
+- failsafe throttle safety behavior to allow control surface movement immediately upon signal return
 
 
 testing todo list:
@@ -447,7 +473,9 @@ testing todo list:
 -test torque boost
 -crank up stick boost again
 -lower default acro rates and see how this impacts i term relax trigger and stick boost
--figure out why there is so little elevator authority when banked on roll
+-SOLVED - figure out why there is so little elevator authority when banked on roll in levelmode
+-increase levelmode strength for a slightly more connected and less squishy feel - evaluate for comfort with proximity to obstacles
+
 
 
 
