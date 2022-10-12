@@ -80,11 +80,34 @@ if ( pwmdir==REVERSE )
   errorvect[1]= -((GEstG[1]*stickvector[2]) - (GEstG[2]*stickvector[1]));
   errorvect[0]= (GEstG[2]*stickvector[0]) - (GEstG[0]*stickvector[2]);
 
-// some limits just in case
 
+//COORDINATED_LEVELMODE -- Sharp flat turns every time (maybe? - need to test)
+//missing from this array of vector cross products is errorvect[YAW]
+//This is the amount that the levelmode error vectors from roll and pitch 
+//deflected together spill over onto the yaw axis.  This motion fights against the 
+//natural physics of a fixedwing  aircraft so we want to remove it anyway.... but its 
+//value instead of fighting the turn can be turned around and directly mixed back into 
+//the rudder servo producing the perfectly calculated rudder input for a flat coordinated turn.
+//This COORDINATED_LEVELMODE needs to be ran with the "bank&yank hack levelmode" calculation group turned OFF!!!!
+//	errorvect[2] = (GEstG[1]*stickvector[0]) - (GEstG[0]*stickvector[1]);
+//  TODO:  come up with a plan on where to add this back in and see what happens
+
+//BANK&YANK_LEVELMODE  --  A dirty dirty hack that works good enough to #sendit and feels natural enough to fly low altitude & proximity to obstacles.
+//Cut up and re-distribute the uncalculated errorvect[YAW], putting it's pieces back
+//over on to roll and pitch while keeping them in sync with deflection sign.  Basically just 
+//adding back the amount from each axis that would have spilled over on to Yaw as pitch and roll
+//are deflected together.  This mode should be ran with an "unlocked" (no I term allowed) rudder 
+//servo whenever pitch && roll is deflected
+if (stickvector[PITCH] < 0) errorvect[PITCH] += -fabsf(GEstG[0]*stickvector[1]);
+else												errorvect[PITCH] +=  fabsf(GEstG[0]*stickvector[1]);
+
+if (stickvector[ROLL] < 0)	errorvect[ROLL] += -fabsf(GEstG[1]*stickvector[0]);
+else												errorvect[ROLL] +=  fabsf(GEstG[1]*stickvector[0]);
+
+// some limits just in case
 limitf( &errorvect[0] , 1.0);
 limitf( &errorvect[1] , 1.0);
-
+//limitf( &errorvect[2] , 1.0);
 
 // fix to recover if triggered inverted
 // the vector cross product results in zero for opposite vectors, so it's bad at 180 error
