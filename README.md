@@ -1,5 +1,5 @@
 # NFE_FixedWing
-## _A unique aproach to fixed wing flight stabilization_
+## _A unique aproach to fixed wing flight stabilization based on NFE_Silverware_
 
 Making model airplanes behave themselves for a better piloting experience with inexpensive hardware.
 
