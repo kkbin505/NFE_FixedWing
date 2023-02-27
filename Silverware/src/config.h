@@ -13,8 +13,8 @@
 //#define BWHOOP
 //#define E011
 //#define H8mini_blue_board
-//#define Silverlite_Brushless
-#define Alienwhoop_ZERO  
+#define Silverlite_Brushless
+//#define Alienwhoop_ZERO  
 
 // *************It is possible to get a servo signal out of the M- motor pad on a brushed flight controller by inverting
 // *************the signal and adding a 10k pullup resistor from M- to 5v+.  Uncomment below if this hardware hack has been performed.
@@ -48,14 +48,14 @@
 
 // *************Radio protocol selection
 // *************select only one
-#define RX_SBUS
+//#define RX_SBUS
 //#define RX_CRSF                                           //Requires tbs firmware v2.88 or newer for failsafe to operate properly
 //#define RX_DSMX_2048
 //#define RX_DSM2_1024
 //#define RX_IBUS
 //#define RX_NRF24_BAYANG_TELEMETRY
 //#define RX_BAYANG_BLE_APP
-//#define RX_BAYANG_PROTOCOL_TELEMETRY_AUTOBIND
+#define RX_BAYANG_PROTOCOL_TELEMETRY_AUTOBIND
 
 
 
@@ -75,10 +75,10 @@
 //*************racemode or horizon are switched on.
 #define ARMING     CHAN_5
 #define MANUALMODE CHAN_OFF
-#define LEVELMODE  CHAN_OFF
+#define LEVELMODE  CHAN_6
 #define RACEMODE   CHAN_OFF
 #define HORIZON    CHAN_OFF
-#define PIDPROFILE CHAN_9               //For switching stickAccelerator & stickTransition profiles on pid.c page
+#define PIDPROFILE CHAN_9              //For switching stickAccelerator & stickTransition profiles on pid.c page
 #define RATES      CHAN_ON
 #define LEDS_ON    CHAN_OFF
 
