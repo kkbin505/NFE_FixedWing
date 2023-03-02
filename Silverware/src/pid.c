@@ -63,9 +63,14 @@ float stickTransitionProfileB[3]  = { 0.5 , 0.5 , 0.5};           //keep values 
 //************************************PIDS****************************************
 //Servo Pids for Fixed Wing
 //                         ROLL       PITCH     YAW
-float pidkp[PIDNUMBER] = { 1.74e-2 , 2.5e-2  , 2.5e-2 }; 
-float pidki[PIDNUMBER] = { 1.1e-1  , 1.1e-1 , 1.1e-1 };	
-float pidkd[PIDNUMBER] = { 2.04e-1 , 3.0e-1  , 3.0e-1 };
+//float pidkp[PIDNUMBER] = { 1.74e-2 , 2.5e-2  , 2.5e-2 }; 
+//float pidki[PIDNUMBER] = { 1.1e-1  , 1.1e-1 , 1.1e-1 };	
+//float pidkd[PIDNUMBER] = { 2.04e-1 , 3.0e-1  , 3.0e-1 };
+
+//                         ROLL       PITCH     YAW
+float pidkp[PIDNUMBER] = { 4.5e-2 , 4.5e-2  , 5.5e-2 }; 
+float pidki[PIDNUMBER] = { 3.0e-1  , 3.0e-1 , 3.0e-1 };	
+float pidkd[PIDNUMBER] = { 5.00e-1 , 5.0e-1  , 6.0e-1 };
 
 
 //Servo Pids for Fixed Wing
@@ -312,7 +317,7 @@ float pid(int x )
 		//make the default state to not accumulate I
     int iwindup = 1;	
 		//Check for defelction against the autocentered stick value - only allow i term to build when "hands off" sticks / freeze i term when stick are moving slowly
-		if (x < 3 && fabsf(rxcopy[x]) < 0.10f){																	//if sticks are in trimable range near center - we might allow I term to fight rotation	
+		if (x < 3 && fabsf(rxcopy[x]) < AUTOCENTER_TRIM_LIMIT){																	//if sticks are in trimable range near center - we might allow I term to fight rotation	
 			if (fabsf( rxcentered[x] ) < 0.01f) {																	//allow i term to build if sticks are very close to not moving at all
 				iwindup = 0;					 																																
 			}else{																																//otherwise sticks are deflected so freeze I term - maybe in the future check to see if the deflection is pushing against or with I term

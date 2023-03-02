@@ -20,6 +20,23 @@ void invert_servo_throws(){
 #endif
 }
 
+
+
+#ifndef ROLL_SUBTRIM 
+#define ROLL_SUBTRIM 0.00
+#endif
+#ifndef PITCH_SUBTRIM 
+#define PITCH_SUBTRIM 0.00
+#endif
+#ifndef YAW_SUBTRIM 
+#define YAW_SUBTRIM 0.00
+#endif
+void apply_subtrim(){
+	mix[0] += (float)ROLL_SUBTRIM/2.0f;
+	mix[1] += (float)PITCH_SUBTRIM/2.0f;
+	mix[2] += (float)YAW_SUBTRIM/2.0f;
+}
+
 //silverware mixer output is limited from 0 to 1, throttle is already 0 to 1 but sticks in rx[] are -1 to 1.  Neutral servos would be expressed as .5
 void apply_rate_mixer(){	//used in levelmode & horizon
 	//for the rate based mixer we take the raw stick conversion factor and plug in a neutral starting point (0.5) plus any detected trim which needs to be retained (autocenter[axis]/2 since we scale total stick range from 2 to 1).
@@ -57,16 +74,15 @@ void apply_sport_mixer(){	//nfe special sauce
 
 
 void modify_mixer_outputs(){
-	
 	invert_servo_throws();
-	
+	apply_subtrim();
+
 #ifdef TORQUE_BOOST
 	for ( int i = 0 ; i < 3 ; i++){			
 		float motord( float in , int x);           
 		mix[i] = motord(  mix[i] , i);
 	}
 #endif  
-	
 }
 
 #ifndef TORQUE_BOOST

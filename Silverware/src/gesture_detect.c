@@ -5,7 +5,7 @@
 #include "defines.h"
 
 #define STICKMAX 0.7f
-#define STICKCENTER 0.2f
+#define STICKCENTER AUTOCENTER_TRIM_LIMIT
 
 
 #define GMACRO_LEFT (rx[0] < - STICKMAX || rx[2] < - STICKMAX)

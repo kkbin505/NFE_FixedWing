@@ -16,11 +16,11 @@
 //NotFastEnuf dynamic angle mode test settings 
 
 // Leveling algorithm coefficients for small errors  (normal flying)
-float apidkp1[APIDNUMBER] = { 1.00 };  // P TERM GAIN ROLL + PITCH 
-float apidkd1[APIDNUMBER] = { 1.0 };    // D TERM GAIN ROLL + PITCH
+float apidkp1[APIDNUMBER] = { 3.0 };  // P TERM GAIN ROLL + PITCH 
+float apidkd1[APIDNUMBER] = { 3.0 };    // D TERM GAIN ROLL + PITCH
 
 // Leveling algorithm coefficients for large errors  (stick banging or collisions)
-float apidkp2[APIDNUMBER] = { 5.00 };   // P TERM GAIN ROLL + PITCH 
+float apidkp2[APIDNUMBER] = { 5.0 };   // P TERM GAIN ROLL + PITCH 
 float apidkd2[APIDNUMBER] = { 5.0 };    // D TERM GAIN ROLL + PITCH
 
 

@@ -13,12 +13,12 @@
 //#define BWHOOP
 //#define E011
 //#define H8mini_blue_board
-#define Silverlite_Brushless
-//#define Alienwhoop_ZERO  
+//#define Silverlite_Brushless
+#define Alienwhoop_ZERO  
 
 // *************It is possible to get a servo signal out of the M- motor pad on a brushed flight controller by inverting
 // *************the signal and adding a 10k pullup resistor from M- to 5v+.  Uncomment below if this hardware hack has been performed.
-//#define PWM_MOSFET_INVERSION
+#define PWM_MOSFET_INVERSION
 
 
 //**********************************************************************************************************************
@@ -26,16 +26,16 @@
 
 // *************EXPO from 0.00 to 1.00 , 0 = no exp
 // *************positive = less sensitive near center 
-#define ACRO_EXPO_ROLL 0.65
-#define ACRO_EXPO_PITCH 0.65
-#define ACRO_EXPO_YAW 0.65
+#define ACRO_EXPO_ROLL 0.35
+#define ACRO_EXPO_PITCH 0.35
+#define ACRO_EXPO_YAW 0.35
 
 #define ANGLE_EXPO_ROLL 0.55	//not used yet
 #define ANGLE_EXPO_PITCH 0.0	//not used yet
 #define ANGLE_EXPO_YAW 0.55		//not used yet
 
 // *************max angle for level mode
-#define LEVEL_MAX_ANGLE 70.0f
+#define LEVEL_MAX_ANGLE 50.0f
 
 // ************* low rates multiplier if rates are assigned to a channel
 #define LOW_RATES_MULTI 0.5f
@@ -50,12 +50,12 @@
 // *************select only one
 //#define RX_SBUS
 //#define RX_CRSF                                           //Requires tbs firmware v2.88 or newer for failsafe to operate properly
-//#define RX_DSMX_2048
+#define RX_DSMX_2048
 //#define RX_DSM2_1024
 //#define RX_IBUS
 //#define RX_NRF24_BAYANG_TELEMETRY
 //#define RX_BAYANG_BLE_APP
-#define RX_BAYANG_PROTOCOL_TELEMETRY_AUTOBIND
+//#define RX_BAYANG_PROTOCOL_TELEMETRY_AUTOBIND
 
 
 
@@ -74,11 +74,11 @@
 //*************channel is on, or racemodeHORIZON if both channels are on - and will be standard LEVELMODE if neither 
 //*************racemode or horizon are switched on.
 #define ARMING     CHAN_5
-#define MANUALMODE CHAN_OFF
+#define MANUALMODE CHAN_7
 #define LEVELMODE  CHAN_6
 #define RACEMODE   CHAN_OFF
 #define HORIZON    CHAN_OFF
-#define PIDPROFILE CHAN_9              //For switching stickAccelerator & stickTransition profiles on pid.c page
+#define PIDPROFILE CHAN_8              //For switching stickAccelerator & stickTransition profiles on pid.c page
 #define RATES      CHAN_ON
 #define LEDS_ON    CHAN_OFF
 
@@ -98,7 +98,7 @@
 #define AUX1_START_ON
 
 // *************ANALOG AUX CHANNELS
-#define USE_ANALOG_AUX
+//#define USE_ANALOG_AUX
 // *************Select analog feature for each channel
 //#define ANALOG_RATE_MULT CHAN_14
 //#define ANALOG_MAX_ANGLE CHAN_15
@@ -211,11 +211,16 @@
 //#define TORQUE_BOOST 1.0		//untested on servos
 
 // *************invert servo and pid throws together
-//#define INVERT_AILERON_SERVO
-//#define INVERT_ELEVATOR_SERVO
-//#define INVERT_RUDDER_SERVO
+#define INVERT_AILERON_SERVO
+#define INVERT_ELEVATOR_SERVO
+#define INVERT_RUDDER_SERVO
 
-
+// *************SERVO SUBTRIMS
+// *************If craft can not be trimmed within the limits of the linear portion of the expo curve, then an offset of subtrim must be applied.  Careful
+//**************this will cause servos to extend beyond the 1000 to 2000us range and will rely on servo's ability to respond to the extended range
+#define ROLL_SUBTRIM 0.00
+#define PITCH_SUBTRIM	-0.15
+#define YAW_SUBTRIM 0.00
 
 
 //**********************************************************************************************************************
@@ -286,7 +291,7 @@
 // level mode "manual" trims ( in degrees)
 // pitch positive forward
 // roll positive right
-#define TRIM_PITCH -8.0
+#define TRIM_PITCH -12.0
 #define TRIM_ROLL 0.0
 
 // flash saving features
