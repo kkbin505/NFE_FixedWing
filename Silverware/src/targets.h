@@ -343,7 +343,7 @@
 
 
 #ifdef Silverlite_Brushless
-#define BRUSHLESS_TARGET
+//#define BRUSHLESS_TARGET
 //LEDS
 #define LED_NUMBER 1
 #define LED1PIN GPIO_Pin_1
@@ -352,7 +352,9 @@
 #define LED2PORT GPIOA
 
 //SOFT I2C & GYRO
-#define USE_HARDWARE_I2C
+#define USE_SOFTWARE_I2C
+#define SOFTI2C_PUSHPULL_CLK
+//#define USE_HARDWARE_I2C
 #define GYRO_ID_1 0x68
 #define GYRO_ID_2 0x98 // common h8 gyro
 #define GYRO_ID_3 0x7D
