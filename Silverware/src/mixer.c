@@ -1,10 +1,24 @@
 #include "mixer.h"
 #include "defines.h"
+#include "util.h"
 
 extern float pidoutput[PIDNUMBER];
 extern float mix[4];
 extern float throttle;
 extern float rxcopy[3];
+
+
+
+void clip_mixer_outputs(){
+	extern float trim[3];
+	for ( int i = 0 ; i < 3 ; i++){				
+		//***********************Clip mmixer outputs - CRITICAL - This needs to be located before ALL USER OUTPUT ADJUSTMENTS like scale, subtrim, etc
+		if ( mix[i] < (0 +(trim[i]/2.0f))) mix[i] = 0 +(trim[i]/2.0f);    
+		if ( mix[i] > (1 +(trim[i]/2.0f))) mix[i] = 1 +(trim[i]/2.0f);
+	}
+	if ( mix[3] < 0 ) mix[3] = 0;    
+	if ( mix[3] > 1 ) mix[3] = 1;
+}
 
 
 
@@ -31,11 +45,46 @@ void invert_servo_throws(){
 #ifndef YAW_SUBTRIM 
 #define YAW_SUBTRIM 0.00
 #endif
-void apply_subtrim(){
+void apply_subtrim(){				//****Has to be applied before servo inversion to keep it "in sync" with user assumption of positive and negative axis movement for configuration ease
 	mix[0] += (float)ROLL_SUBTRIM/2.0f;
 	mix[1] += (float)PITCH_SUBTRIM/2.0f;
 	mix[2] += (float)YAW_SUBTRIM/2.0f;
 }
+
+
+
+#ifndef ROLL_SCALE_POS
+#define ROLL_SCALE_POS 1.00
+#endif
+#ifndef ROLL_SCALE_NEG
+#define ROLL_SCALE_NEG 1.00
+#endif
+#ifndef PITCH_SCALE_POS
+#define PITCH_SCALE_POS 1.00
+#endif
+#ifndef PITCH_SCALE_NEG
+#define PITCH_SCALE_NEG 1.00
+#endif
+#ifndef YAW_SCALE_POS
+#define YAW_SCALE_POS 1.00
+#endif
+#ifndef YAW_SCALE_NEG 
+#define YAW_SCALE_NEG 1.00
+#endif
+void apply_servo_scale(){
+	extern float trim[3];
+		
+	if (mix[ROLL] > (trim[ROLL]/2.0f) + 0.5f) mix[ROLL] = mapf( mix[ROLL], ((trim[ROLL]/2.0f) + 0.5f), 1 +(trim[ROLL]/2.0f), ((trim[ROLL]/2.0f) + 0.5f), (1 +(trim[ROLL]/2.0f))-((1.0f-(float)ROLL_SCALE_POS)/2.0f) );
+	if (mix[ROLL] < (trim[ROLL]/2.0f) + 0.5f) mix[ROLL] = mapf( mix[ROLL], ((trim[ROLL]/2.0f) + 0.5f), 0 +(trim[ROLL]/2.0f), ((trim[ROLL]/2.0f) + 0.5f), (0 +(trim[ROLL]/2.0f))+((1.0f-(float)ROLL_SCALE_NEG)/2.0f) );
+
+	if (mix[PITCH] > (trim[PITCH]/2.0f) + 0.5f) mix[PITCH] = mapf( mix[PITCH], ((trim[PITCH]/2.0f) + 0.5f), 1 +(trim[PITCH]/2.0f), ((trim[PITCH]/2.0f) + 0.5f), (1 +(trim[PITCH]/2.0f))-((1.0f-(float)PITCH_SCALE_POS)/2.0f) );
+	if (mix[PITCH] < (trim[PITCH]/2.0f) + 0.5f) mix[PITCH] = mapf( mix[PITCH], ((trim[PITCH]/2.0f) + 0.5f), 0 +(trim[PITCH]/2.0f), ((trim[PITCH]/2.0f) + 0.5f), (0 +(trim[PITCH]/2.0f))+((1.0f-(float)PITCH_SCALE_NEG)/2.0f) );
+
+	if (mix[YAW] > (trim[YAW]/2.0f) + 0.5f) mix[YAW] = mapf( mix[YAW], ((trim[YAW]/2.0f) + 0.5f), 1 +(trim[YAW]/2.0f), ((trim[YAW]/2.0f) + 0.5f), (1 +(trim[YAW]/2.0f))-((1.0f-(float)YAW_SCALE_POS)/2.0f) );
+	if (mix[YAW] < (trim[YAW]/2.0f) + 0.5f) mix[YAW] = mapf( mix[YAW], ((trim[YAW]/2.0f) + 0.5f), 0 +(trim[YAW]/2.0f), ((trim[YAW]/2.0f) + 0.5f), (0 +(trim[YAW]/2.0f))+((1.0f-(float)YAW_SCALE_NEG)/2.0f) );
+}
+
+
 
 //silverware mixer output is limited from 0 to 1, throttle is already 0 to 1 but sticks in rx[] are -1 to 1.  Neutral servos would be expressed as .5
 void apply_rate_mixer(){	//used in levelmode & horizon
@@ -74,8 +123,12 @@ void apply_sport_mixer(){	//nfe special sauce
 
 
 void modify_mixer_outputs(){
-	invert_servo_throws();
+	clip_mixer_outputs();
+	apply_servo_scale();
 	apply_subtrim();
+	invert_servo_throws();
+	
+	
 
 #ifdef TORQUE_BOOST
 	for ( int i = 0 ; i < 3 ; i++){			

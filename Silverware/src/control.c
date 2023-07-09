@@ -133,14 +133,11 @@ void control( void)
 	
 	modify_mixer_outputs();
 
-	//***********************Send Motor PWM Command Logic
+	//***********************Send Servo PWM Command Logic
 	for ( int i = 0 ; i <= 3 ; i++){				
-		//***********************Clip mmixer outputs 
-		if ( mix[i] < 0 ) mix[i] = 0;    
-		if ( mix[i] > 1 ) mix[i] = 1;
 		pwm_set( i , servo_pwm( mix[i] ) );	
 	}
-	//***********************End Motor PWM Command Logic
+	//***********************End Servo PWM Command Logic
 	
 	thrsum = throttle;		//calculate throttle sum for voltage monitoring logic in main loop	
 }

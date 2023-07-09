@@ -222,6 +222,14 @@
 #define PITCH_SUBTRIM	0.00
 #define YAW_SUBTRIM 0.00
 
+// *************SERVO OUTPUT SCALE
+#define ROLL_SCALE_POS 1.00
+#define ROLL_SCALE_NEG 1.00
+#define PITCH_SCALE_POS 1.00
+#define PITCH_SCALE_NEG 1.00
+#define YAW_SCALE_POS 1.00
+#define YAW_SCALE_NEG 1.00
+
 
 //**********************************************************************************************************************
 //***********************************************MOTOR OUTPUT SETTINGS**************************************************
