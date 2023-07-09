@@ -8,7 +8,7 @@ Making model airplanes behave themselves for a better piloting experience with i
 - Serial Receiver DSM, IBUS, SBUS, CRSF or SPI connected XN297 or NRF24L01 Bayang protocol
 ## Flight Modes
 - Sport Mode - Direct passthrough of pilot controls overlayed on top of independent flight stabilization.
-- Level Mode - Hands off self-righting behavior with bank angle limitation on roll and pitch attitudes suitable for new pilots, kids, or emergency recovery.
+- Level Mode - Hands off self-righting behavior with bank angle limitation on roll and pitch attitudes suitable for new pilots, kids, or emergency recovery.  WARNING - This is a work in progress and does not turn very well yet for bank and yank.  Suggested radio mixing of yaw to roll stick decreases turning radius but still may turn poorly on non 3d type airframes.  Additional development pending
 - Manual Mode - Direct passthrough of pilot controls with selectable high/low rates and expo applied in firmware.
 
 ## Features
