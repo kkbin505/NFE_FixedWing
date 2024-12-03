@@ -5,8 +5,8 @@
 
 // defines for things that do not normally need changing
 
-#define MOTOR_BL 0	//aileron
-#define MOTOR_FL 1	//elevator
+#define MOTOR_BL 0	//FLAPPERON_left
+#define MOTOR_FL 1	//FLAPPERON_right
 #define MOTOR_BR 2	//rudder
 #define MOTOR_FR 3	//throttle
 

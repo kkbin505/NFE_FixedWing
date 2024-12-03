@@ -23,10 +23,10 @@ void clip_mixer_outputs(){
 
 
 void invert_servo_throws(){
-#ifdef INVERT_AILERON_SERVO
+#ifdef INVERT_FLAPPERON_SERVO_LEFT
 	mix[0] = 1.0f - mix[0];
 #endif
-#ifdef INVERT_ELEVATOR_SERVO
+#ifdef INVERT_FLAPPERON_SERVO_RIGHT
 	mix[1] = 1.0f - mix[1];
 #endif
 #ifdef INVERT_RUDDER_SERVO
@@ -90,35 +90,35 @@ void apply_servo_scale(){
 void apply_rate_mixer(){	//used in levelmode & horizon
 	//for the rate based mixer we take the raw stick conversion factor and plug in a neutral starting point (0.5) plus any detected trim which needs to be retained (autocenter[axis]/2 since we scale total stick range from 2 to 1).
 	extern float trim[3];
-	mix[MOTOR_BL] = (trim[ROLL]/2.0f) + 0.5f + pidoutput[ROLL];						// M0			Aileron
-	mix[MOTOR_FL] = (trim[PITCH]/2.0f) + 0.5f + pidoutput[PITCH];   			// M1			Elevator
-	mix[MOTOR_BR] = ((rxcopy[2]+1.0f)/2.0f) + pidoutput[YAW];	 	 					// M2			Rudder
-	mix[MOTOR_FR] = throttle; 																						// M3			Throttle		
+	mix[MOTOR_BL] = (trim[ROLL]/2.0f) + 0.5f + pidoutput[ROLL]/2.0f + pidoutput[PITCH]/2.0f;	// M0			Flapperon Left
+	mix[MOTOR_FL] = (trim[PITCH]/2.0f) + 0.5f + pidoutput[ROLL]/2.0f - pidoutput[PITCH]/2.0f;   // M1			Flapperon Right
+	mix[MOTOR_BR] = ((rxcopy[2]+1.0f)/2.0f) + pidoutput[YAW];	 	 			    // M2			Rudder
+	mix[MOTOR_FR] = throttle; 														// M3			Throttle		
 }
 
 
 void apply_racemode_mixer(){	//used in racemode and racemode horizon
 	extern float trim[3];
-	mix[MOTOR_BL] = (trim[ROLL]/2.0f) + 0.5f + pidoutput[ROLL];						// M0			Aileron
-	mix[MOTOR_FL] = ((rxcopy[1]+1.0f)/2.0f) + pidoutput[PITCH];				    // M1			Elevator
-	mix[MOTOR_BR] = ((rxcopy[2]+1.0f)/2.0f) + pidoutput[YAW];	 	 					// M2			Rudder
-	mix[MOTOR_FR] = throttle; 																						// M3			Throttle		
+	mix[MOTOR_BL] = (trim[ROLL]/2.0f) + 0.5f + pidoutput[ROLL]/2.0f + pidoutput[PITCH]/2.0f;	// M0			Flapperon Left
+	mix[MOTOR_FL] = (trim[PITCH]/2.0f) + 0.5f + pidoutput[ROLL]/2.0f - pidoutput[PITCH]/2.0f;   // M1			Flapperon Right
+	mix[MOTOR_BR] = ((rxcopy[2]+1.0f)/2.0f) + pidoutput[YAW];	 	 			 	// M2			Rudder
+	mix[MOTOR_FR] = throttle; 														// M3			Throttle		
 }
 
 
 void apply_manual_mixer(){	//no stabilization
-	mix[MOTOR_BL] = (rxcopy[0]+1.0f)/2.0f;																// M0			Aileron
-	mix[MOTOR_FL] = (rxcopy[1]+1.0f)/2.0f;   															// M1			Elevator
-	mix[MOTOR_BR] = (rxcopy[2]+1.0f)/2.0f;  															// M2			Rudder
-	mix[MOTOR_FR] = throttle; 																						// M3			Throttle
+	mix[MOTOR_BL] = ((rxcopy[0]+1.0f)/2.0f+(rxcopy[1]+1.0f)/2.0f)/2.0f;				// M0			Flapperon Left
+	mix[MOTOR_FL] = ((rxcopy[0]+1.0f)/2.0f-(rxcopy[1]+1.0f)/2.0f)/2.0f;	  			// M1			Flapperon Right
+	mix[MOTOR_BR] = (rxcopy[2]+1.0f)/2.0f;  										// M2			Rudder
+	mix[MOTOR_FR] = throttle; 														// M3			Throttle
 }
 
 
 void apply_sport_mixer(){	//nfe special sauce
-	mix[MOTOR_BL] = ((rxcopy[0]+1.0f)/2.0f) + pidoutput[ROLL];						// M0			Aileron
-	mix[MOTOR_FL] = ((rxcopy[1]+1.0f)/2.0f) + pidoutput[PITCH];   				// M1			Elevator
+	mix[MOTOR_BL] = ((rxcopy[0]+1.0f)/2.0f) + pidoutput[ROLL]/2.0f + pidoutput[PITCH]/2.0f;						// M0			Flapperon Left
+	mix[MOTOR_FL] = ((rxcopy[1]+1.0f)/2.0f) + pidoutput[ROLL]/2.0f - pidoutput[PITCH]/2.0;   					// M1			Flapperon Right
 	mix[MOTOR_BR] = ((rxcopy[2]+1.0f)/2.0f) + pidoutput[YAW];  						// M2			Rudder
-	mix[MOTOR_FR] = throttle; 																						// M3			Throttle
+	mix[MOTOR_FR] = throttle; 														// M3			Throttle
 }
 
 
